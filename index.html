@@ -1,0 +1,1002 @@
+<meta charset="utf-8">
+<title>Imbas Tecnologia — Transformação Digital com IA</title>
+<meta name="color-scheme" content="dark">
+<style>
+  :root{
+    --void:#05100B;
+    --void-2:#081711;
+    --panel:#0B1B13;
+    --panel-2:#0E2418;
+    --line:rgba(120,200,165,.16);
+    --line-soft:rgba(120,200,165,.09);
+    --emerald:#4BE8A0;
+    --emerald-dim:#2BA872;
+    --gold:#E3B860;
+    --gold-soft:#C79B4A;
+    --mist:#A8C4B4;
+    --mist-dim:#7A9587;
+    --bright:#EAF6EE;
+    --display:"Palatino Linotype",Palatino,"Book Antiqua","Iowan Old Style",Georgia,serif;
+    --body:"Gill Sans","Gill Sans MT",Seravek,"Segoe UI",Calibri,sans-serif;
+    --mono:"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--void);
+    color:var(--mist);
+    font-family:var(--body);
+    font-size:17px;
+    line-height:1.65;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1100px 700px at 78% -8%, rgba(75,232,160,.07), transparent 60%),
+      radial-gradient(900px 600px at 8% 100%, rgba(227,184,96,.05), transparent 55%);
+  }
+  ::selection{background:rgba(227,184,96,.35);color:var(--bright)}
+
+  a{color:var(--emerald);text-decoration:none}
+  a:hover{color:var(--gold)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+  h1,h2,h3{font-family:var(--display);color:var(--bright);font-weight:400;text-wrap:balance}
+  .eyebrow{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.32em;
+    text-transform:uppercase;color:var(--gold);
+  }
+  .eyebrow .glyph{color:var(--emerald);letter-spacing:.1em;margin-right:.6em}
+
+  .wrap{max-width:1160px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+  /* ============ NAV ============ */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(5,16,11,.82);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-inner{
+    max-width:1160px;margin:0 auto;padding:0 32px;
+    display:flex;align-items:center;justify-content:space-between;height:72px;
+  }
+  .logo{display:flex;align-items:center;gap:14px;color:var(--bright)}
+  .logo:hover{color:var(--bright)}
+  .logo-mark{width:38px;height:38px;flex:none}
+  .logo-name{font-family:var(--display);font-size:1.35rem;letter-spacing:.02em}
+  .logo-name em{font-style:normal;color:var(--gold)}
+  .logo-sub{font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;color:var(--mist-dim);display:block;text-transform:uppercase;margin-top:1px}
+  .nav-links{display:flex;gap:36px;align-items:center;list-style:none}
+  .nav-links a{color:var(--mist);font-size:.92rem;letter-spacing:.04em}
+  .nav-links a:hover{color:var(--emerald)}
+  .nav-cta{
+    font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;
+    border:1px solid var(--emerald-dim);padding:10px 20px;color:var(--emerald) !important;
+    clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+    transition:background .25s,color .25s;
+  }
+  .nav-cta:hover{background:var(--emerald);color:var(--void) !important}
+  @media(max-width:820px){.nav-links li:not(:last-child){display:none}}
+
+  /* ============ HERO ============ */
+  .hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden}
+  .hero-grid{
+    display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);
+    gap:48px;align-items:center;width:100%;padding:80px 0 96px;
+  }
+  @media(max-width:920px){
+    .hero-grid{grid-template-columns:1fr;padding:56px 0 72px}
+    .hero-visual{order:-1;max-width:340px;margin:0 auto}
+  }
+  .hero h1{
+    font-size:clamp(2.4rem,5.2vw,4.1rem);
+    line-height:1.12;letter-spacing:-.01em;margin:26px 0 24px;
+  }
+  .hero h1 .lit{
+    color:var(--gold);font-style:italic;position:relative;white-space:nowrap;
+    text-shadow:0 0 34px rgba(227,184,96,.45);
+  }
+  .hero .lede{max-width:34rem;font-size:1.12rem;color:var(--mist)}
+  .hero .lede strong{color:var(--bright);font-weight:600}
+  .hero-actions{display:flex;gap:18px;margin-top:40px;flex-wrap:wrap}
+  .btn{
+    display:inline-block;font-family:var(--mono);font-size:.8rem;
+    letter-spacing:.16em;text-transform:uppercase;padding:16px 30px;
+    clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+    transition:transform .25s,box-shadow .25s,background .25s,color .25s;
+  }
+  .btn-gold{background:var(--gold);color:#241a08}
+  .btn-gold:hover{background:#f0ca79;color:#241a08;transform:translateY(-2px);box-shadow:0 8px 34px rgba(227,184,96,.35)}
+  .btn-ghost{border:1px solid var(--line);color:var(--mist)}
+  .btn-ghost:hover{border-color:var(--emerald);color:var(--emerald)}
+  .hero-visual{position:relative;aspect-ratio:1;max-width:480px;justify-self:end;width:100%}
+  .hero-visual canvas{width:100%;height:100%;display:block}
+  .knot3d{
+    position:absolute;inset:9%;width:82%;height:82%;object-fit:contain;
+    filter:drop-shadow(0 0 30px rgba(75,232,160,.38)) drop-shadow(0 0 90px rgba(227,184,96,.22));
+    animation:float3d 9s ease-in-out infinite;
+  }
+  @keyframes float3d{
+    0%,100%{transform:translateY(0) rotate(-2deg)}
+    50%{transform:translateY(-16px) rotate(2deg)}
+  }
+  .rings3d{
+    width:100%;max-width:380px;display:block;margin:0 auto;
+    filter:drop-shadow(0 0 26px rgba(75,232,160,.32)) drop-shadow(0 0 70px rgba(227,184,96,.18));
+    animation:float3d 11s ease-in-out infinite;
+  }
+  .proof-quote{
+    display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
+    gap:48px;align-items:center;
+  }
+  @media(max-width:820px){.proof-quote{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){.knot3d,.rings3d{animation:none}}
+  .scroll-hint{
+    position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:.62rem;letter-spacing:.4em;text-transform:uppercase;
+    color:var(--mist-dim);animation:hint 3s ease-in-out infinite;
+  }
+  @keyframes hint{0%,100%{opacity:.4;transform:translate(-50%,0)}50%{opacity:1;transform:translate(-50%,6px)}}
+
+  /* ============ OGHAM STRIPS ============ */
+  .ogham-strip{height:44px;width:100%;opacity:.55}
+  .ogham-strip svg{width:100%;height:100%;display:block}
+
+  /* ============ ETYMOLOGY ============ */
+  .etym{border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);background:var(--void-2)}
+  .etym-inner{padding:72px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:56px;align-items:center}
+  @media(max-width:820px){.etym-inner{grid-template-columns:1fr;gap:32px}}
+  .etym-word{font-family:var(--display);font-size:clamp(2.6rem,5vw,3.6rem);color:var(--bright);line-height:1}
+  .etym-word .dot{color:var(--gold)}
+  .etym-phon{font-family:var(--mono);color:var(--mist-dim);font-size:.9rem;margin-top:10px;letter-spacing:.08em}
+  .etym-ogham{font-size:1.6rem;color:var(--emerald);margin-top:14px;letter-spacing:.2em}
+  .etym-def{font-size:1.15rem;max-width:36rem}
+  .etym-def .cls{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:14px}
+  .etym-def em{color:var(--bright)}
+  .etym-def p+p{margin-top:14px}
+
+  /* ============ SECTIONS ============ */
+  section{position:relative}
+  .section-pad{padding:110px 0}
+  .section-head{max-width:44rem;margin-bottom:64px}
+  .section-head h2{font-size:clamp(1.9rem,3.6vw,2.7rem);margin:18px 0 16px;line-height:1.2}
+  .section-head p{font-size:1.08rem}
+
+  /* ============ SERVICES ============ */
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  @media(max-width:720px){.cards{grid-template-columns:1fr}}
+  .card{
+    background:linear-gradient(160deg,var(--panel) 0%,var(--void-2) 100%);
+    border:1px solid var(--line-soft);
+    clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,0 100%);
+    padding:38px 30px 34px;position:relative;
+    transition:border-color .3s,transform .3s;
+  }
+  .card:hover{border-color:rgba(75,232,160,.45);transform:translateY(-4px)}
+  .card .sigil{width:52px;height:52px;margin-bottom:24px}
+  .card h3{font-size:1.45rem;margin-bottom:6px}
+  .card .card-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;color:var(--emerald);display:block;margin-bottom:18px}
+  .card p{font-size:.97rem;color:var(--mist)}
+  .card ul{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:10px}
+  .card li{font-size:.92rem;padding-left:22px;position:relative}
+  .card li::before{
+    content:"";position:absolute;left:0;top:.55em;width:12px;height:2px;
+    background:var(--gold);
+  }
+
+  /* ============ EXPLAINER (vídeo-diagrama) ============ */
+  .explainer{background:var(--void-2);border-top:1px solid var(--line-soft)}
+  .player{
+    max-width:980px;margin:0 auto;position:relative;
+    border:1px solid var(--line);
+    background:linear-gradient(165deg,var(--panel) 0%,var(--void) 92%);
+    clip-path:polygon(0 0,calc(100% - 26px) 0,100% 26px,100% 100%,26px 100%,0 calc(100% - 26px));
+  }
+  .stage{display:block;width:100%;height:auto}
+  .stage text{font-family:var(--body)}
+  .stage .t-big{font-family:var(--display);font-size:54px;fill:var(--gold)}
+  .stage .t-h{fill:var(--bright);font-size:18px}
+  .stage .t-b{fill:var(--mist);font-size:15px}
+  .stage .t-dim{fill:var(--mist-dim);font-size:12.5px}
+  .stage .t-mono{font-family:var(--mono);font-size:11px;letter-spacing:3px;fill:var(--emerald)}
+  .stage .t-cap{fill:var(--mist);font-size:16.5px;font-style:italic}
+  .stage .t-pain{fill:#C4704D}
+  .stage .nodebox{fill:rgba(11,27,19,.92);stroke:rgba(120,200,165,.4)}
+  .stage .wire{stroke:var(--emerald-dim);stroke-width:1.6;fill:none}
+  .stage .sketch{stroke:var(--mist-dim);stroke-width:1.6;fill:none}
+  .scene{opacity:0;pointer-events:none;transition:opacity .5s ease}
+  .scene.active{opacity:1}
+  @media (prefers-reduced-motion: no-preference){
+    .active .a-doc{animation:docIn .45s both}
+    .active .a-fade{animation:fadeUp .6s both}
+    .active .a-node{animation:fadeUp .55s both}
+    .active .a-flow{stroke-dasharray:5 9;animation:dashMove 1.1s linear infinite}
+    .active .a-dot{animation:dotRun 2s ease-in-out infinite}
+    .active .a-hand{animation:spinHand 3.2s linear infinite}
+  }
+  .stage .a-doc{transform-box:fill-box;transform-origin:center}
+  @keyframes docIn{from{opacity:0;transform:translateY(-24px)}to{opacity:1;transform:none}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes dashMove{to{stroke-dashoffset:-28}}
+  @keyframes dotRun{0%{transform:translateX(0);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(46px);opacity:0}}
+  @keyframes spinHand{to{transform:rotate(360deg)}}
+  .poster{
+    position:absolute;inset:0;z-index:3;width:100%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+    background:rgba(5,16,11,.74);border:0;cursor:pointer;color:var(--gold);
+  }
+  .poster-btn{
+    width:86px;height:86px;border-radius:50%;border:1px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(227,184,96,.12);box-shadow:0 0 44px rgba(227,184,96,.28);
+    transition:transform .25s;
+  }
+  .poster:hover .poster-btn{transform:scale(1.08)}
+  .poster-btn svg{width:30px;height:30px;margin-left:4px}
+  .poster-label{
+    font-family:var(--mono);font-size:.68rem;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--mist);
+  }
+  .controls{display:flex;align-items:center;gap:16px;padding:14px 20px;border-top:1px solid var(--line-soft)}
+  .ctrl-btn{
+    background:none;border:1px solid var(--line);color:var(--emerald);
+    width:40px;height:36px;cursor:pointer;font-size:.72rem;
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  }
+  .ctrl-btn:hover{border-color:var(--emerald)}
+  .segs{flex:1;display:flex;gap:6px}
+  .seg{flex:1;height:4px;background:rgba(120,200,165,.16);position:relative;cursor:pointer;border:0;padding:0}
+  .seg i{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--gold)}
+  .scene-title{
+    font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--mist-dim);min-width:170px;text-align:right;
+  }
+  @media(max-width:640px){.scene-title{display:none}}
+
+  /* ============ METHOD ============ */
+  .method{background:var(--void-2);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+  .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-left:1px solid var(--line-soft)}
+  @media(max-width:920px){.steps{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.steps{grid-template-columns:1fr}}
+  .step{border-right:1px solid var(--line-soft);padding:36px 28px 40px;position:relative}
+  .step .ogham-num{height:64px;margin-bottom:22px}
+  .step .ogham-num svg{height:100%;display:block}
+  .step h3{font-size:1.25rem;margin-bottom:4px}
+  .step .step-name{font-family:var(--mono);font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:14px}
+  .step p{font-size:.93rem}
+  .method-note{margin-top:44px;font-family:var(--mono);font-size:.75rem;color:var(--mist-dim);letter-spacing:.06em}
+  .method-note b{color:var(--emerald);font-weight:400}
+
+  /* ============ PROOF ============ */
+  .proof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-bottom:72px}
+  @media(max-width:820px){.proof-grid{grid-template-columns:1fr}}
+  .proof{
+    border:1px solid var(--line-soft);padding:34px 28px;
+    clip-path:polygon(0 0,100% 0,100% 100%,20px 100%,0 calc(100% - 20px));
+  }
+  .proof .num{
+    font-family:var(--display);font-size:2.9rem;color:var(--gold);line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .proof .num small{font-size:1.4rem;color:var(--gold-soft)}
+  .proof p{margin-top:12px;font-size:.94rem}
+  blockquote{
+    border-left:2px solid var(--gold);padding:8px 0 8px 36px;max-width:46rem;
+  }
+  blockquote p{
+    font-family:var(--display);font-size:clamp(1.3rem,2.4vw,1.7rem);
+    color:var(--bright);line-height:1.45;font-style:italic;
+  }
+  blockquote cite{
+    display:block;margin-top:20px;font-style:normal;
+    font-family:var(--mono);font-size:.75rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--mist-dim);
+  }
+
+  /* ============ CTA ============ */
+  .cta-final{
+    text-align:center;padding:130px 0 140px;position:relative;overflow:hidden;
+    border-top:1px solid var(--line-soft);
+  }
+  .cta-final::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(600px 380px at 50% 40%, rgba(227,184,96,.10), transparent 65%);
+  }
+  .cta-final h2{font-size:clamp(2rem,4.4vw,3.2rem);max-width:26ch;margin:20px auto 22px}
+  .cta-final h2 .lit{color:var(--gold);font-style:italic;text-shadow:0 0 30px rgba(227,184,96,.4)}
+  .cta-final p{max-width:38rem;margin:0 auto 42px}
+
+  /* ============ FOOTER ============ */
+  footer{border-top:1px solid var(--line-soft);background:var(--void-2)}
+  .foot-inner{
+    max-width:1160px;margin:0 auto;padding:56px 32px 40px;
+    display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;
+  }
+  .foot-brand{max-width:300px}
+  .foot-brand .logo{margin-bottom:16px}
+  .foot-brand p{font-size:.85rem;color:var(--mist-dim)}
+  .foot-cols{display:flex;gap:64px;flex-wrap:wrap}
+  .foot-col h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;font-weight:400}
+  .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .foot-col a{color:var(--mist);font-size:.9rem}
+  .foot-legal{
+    border-top:1px solid var(--line-soft);
+  }
+  .foot-legal div{
+    max-width:1160px;margin:0 auto;padding:20px 32px;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;color:var(--mist-dim);
+  }
+
+  /* ============ REVEAL ============ */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    .scroll-hint{animation:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#topo" aria-label="Imbas Tecnologia — início">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <g fill="none" stroke="#4BE8A0" stroke-width="1.6">
+          <circle cx="20" cy="14.5" r="8.5"/>
+          <circle cx="14.8" cy="23.5" r="8.5"/>
+          <circle cx="25.2" cy="23.5" r="8.5"/>
+        </g>
+        <circle cx="20" cy="20.5" r="2.2" fill="#E3B860"/>
+      </svg>
+      <span>
+        <span class="logo-name">Imbas <em>Tecnologia</em></span>
+        <span class="logo-sub">conhecimento que ilumina</span>
+      </span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#solucoes">Soluções</a></li>
+      <li><a href="#automacao">Como funciona</a></li>
+      <li><a href="#metodo">Método</a></li>
+      <li><a href="#porque">Por que Imbas</a></li>
+      <li><a class="nav-cta" href="#contato">Agendar diagnóstico</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="topo">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow"><span class="glyph">ᚔᚋᚁᚐᚄ</span> imbas · irlandês antigo · «conhecimento que ilumina»</p>
+      <h1>Todo escritório guarda um saber antigo. Nós o tornamos <span class="lit">clarividente</span>.</h1>
+      <p class="lede">A Imbas Tecnologia conduz a <strong>transformação digital com inteligência artificial</strong> de escritórios de contabilidade, advocacia, empresas de marketplace e de serviços — automatizando o repetitivo para que sua equipe exerça o que nenhuma máquina tem: julgamento.</p>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href="#contato">Iniciar a transformação</a>
+        <a class="btn btn-ghost" href="#metodo">Conhecer o método</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <canvas id="sigil"></canvas>
+      <img class="knot3d" src="render-knot.webp" alt="">
+    </div>
+  </div>
+  <div class="scroll-hint">descer</div>
+</header>
+
+<div class="ogham-strip" aria-hidden="true"><svg preserveAspectRatio="none"></svg></div>
+
+<section class="etym reveal">
+  <div class="wrap etym-inner">
+    <div>
+      <div class="etym-word">im<span class="dot">·</span>bas</div>
+      <div class="etym-phon">/ˈim.bas/ · substantivo</div>
+      <div class="etym-ogham" aria-hidden="true">ᚔᚋᚁᚐᚄ</div>
+    </div>
+    <div class="etym-def">
+      <span class="cls">Etimologia · tradição celta</span>
+      <p>Na Irlanda antiga, <em>imbas forosnai</em> era o dom supremo dos poetas: <em>a iluminação súbita</em> — enxergar, num instante, o que estava oculto nos fatos.</p>
+      <p>É exatamente isso que a inteligência artificial bem aplicada faz pelos seus dados: revela o que sempre esteve lá, esperando ser visto.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" id="solucoes">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow"><span class="glyph">ᚄ</span> Soluções</p>
+      <h2>Quatro ofícios, uma mesma alquimia: seus dados transformados em vantagem.</h2>
+      <p>Cada prática tem seus próprios rituais. Desenhamos a IA em torno deles — nunca o contrário.</p>
+    </div>
+    <div class="cards">
+      <article class="card reveal">
+        <svg class="sigil" viewBox="0 0 52 52" aria-hidden="true">
+          <g fill="none" stroke="#4BE8A0" stroke-width="1.5">
+            <path d="M8 40 L8 22 M18 40 L18 14 M28 40 L28 26 M38 40 L38 10"/>
+            <path d="M4 44 L48 44"/>
+          </g>
+          <circle cx="38" cy="10" r="3" fill="#E3B860"/>
+        </svg>
+        <h3>Contabilidade clarividente</h3>
+        <span class="card-tag">Escritórios contábeis</span>
+        <p>O fechamento deixa de ser maratona. A IA assume o lançamento e a conferência; seu time assume a análise e o conselho ao cliente.</p>
+        <ul>
+          <li>Classificação e conciliação automatizadas por IA</li>
+          <li>Leitura inteligente de documentos fiscais</li>
+          <li>Previsão de fluxo de caixa e alertas de anomalia</li>
+          <li>Relatórios que o cliente entende — gerados em minutos</li>
+        </ul>
+      </article>
+      <article class="card reveal">
+        <svg class="sigil" viewBox="0 0 52 52" aria-hidden="true">
+          <g fill="none" stroke="#4BE8A0" stroke-width="1.5">
+            <path d="M26 6 L26 46 M10 14 L42 14"/>
+            <path d="M10 14 L4 28 A8 6 0 0 0 16 28 Z M42 14 L36 28 A8 6 0 0 0 48 28 Z"/>
+          </g>
+          <circle cx="26" cy="6" r="3" fill="#E3B860"/>
+        </svg>
+        <h3>Advocacia aumentada</h3>
+        <span class="card-tag">Escritórios de advocacia</span>
+        <p>Horas de pesquisa viram minutos. A tese continua sua — a IA cuida de encontrar, resumir e vigiar o que a sustenta.</p>
+        <ul>
+          <li>Pesquisa jurisprudencial assistida por IA</li>
+          <li>Análise e resumo de peças e contratos</li>
+          <li>Gestão inteligente de prazos e intimações</li>
+          <li>Minutas iniciais geradas com o estilo do escritório</li>
+        </ul>
+      </article>
+      <article class="card reveal">
+        <svg class="sigil" viewBox="0 0 52 52" aria-hidden="true">
+          <g fill="none" stroke="#4BE8A0" stroke-width="1.5">
+            <circle cx="26" cy="26" r="17"/>
+            <path d="M26 9 L26 26 L38 34"/>
+            <path d="M9 26 L3 26 M43 26 L49 26 M26 43 L26 49"/>
+          </g>
+          <circle cx="26" cy="26" r="3" fill="#E3B860"/>
+        </svg>
+        <h3>Transformação sob medida</h3>
+        <span class="card-tag">Empresas de serviços</span>
+        <p>Para negócios que sentem que trabalham para os próprios sistemas — e não o contrário. Redesenhamos a operação com IA no centro.</p>
+        <ul>
+          <li>Diagnóstico de maturidade digital</li>
+          <li>Integração de sistemas e eliminação de retrabalho</li>
+          <li>Copilotos de IA treinados no seu negócio</li>
+          <li>Capacitação da equipe para a nova operação</li>
+        </ul>
+      </article>
+      <article class="card reveal">
+        <svg class="sigil" viewBox="0 0 52 52" aria-hidden="true">
+          <g fill="none" stroke="#4BE8A0" stroke-width="1.5">
+            <path d="M8 20 L11 8 L41 8 L44 20"/>
+            <path d="M8 20 Q11 26 14 20 Q17 26 20 20 Q23 26 26 20 Q29 26 32 20 Q35 26 38 20 Q41 26 44 20"/>
+            <path d="M11 24 L11 44 L41 44 L41 24"/>
+            <path d="M18 44 L18 32 L26 32 L26 44"/>
+          </g>
+          <circle cx="35" cy="34" r="3" fill="#E3B860"/>
+        </svg>
+        <h3>Marketplace autônomo</h3>
+        <span class="card-tag">Empresas de marketplace</span>
+        <p>Vender em cinco canais não pode custar cinco operações. A IA concilia, integra e responde — enquanto seu time cuida de crescer.</p>
+        <ul>
+          <li>Conciliação de repasses, taxas e comissões por canal</li>
+          <li>Integração de pedidos, estoque e emissão fiscal</li>
+          <li>Precificação dinâmica assistida por IA</li>
+          <li>Atendimento e pós-venda automatizados</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="explainer section-pad" id="automacao">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow"><span class="glyph">ᚂ</span> Como funciona</p>
+      <h2>A anatomia de uma automação — e o que ela devolve à sua empresa.</h2>
+      <p>Aperte o play: em 26 segundos você entende o caminho que um documento percorre e o tamanho do ganho no processo.</p>
+    </div>
+    <div class="player reveal" id="player">
+      <svg class="stage" viewBox="0 0 960 540" aria-label="Diagrama animado: como funciona uma automação com IA e quanto a empresa ganha">
+
+        <!-- CENA 1 · o fluxo manual -->
+        <g class="scene" id="sc1">
+          <text class="t-mono" x="480" y="80" text-anchor="middle">HOJE · O FLUXO MANUAL</text>
+          <g class="a-doc" style="animation-delay:.2s">
+            <rect x="110" y="170" width="96" height="120" class="nodebox"/>
+          </g>
+          <g class="a-doc" style="animation-delay:.55s">
+            <rect x="124" y="182" width="96" height="120" class="nodebox"/>
+          </g>
+          <g class="a-doc" style="animation-delay:.9s">
+            <rect x="138" y="194" width="96" height="120" class="nodebox"/>
+            <line x1="152" y1="222" x2="220" y2="222" class="sketch"/>
+            <line x1="152" y1="244" x2="220" y2="244" class="sketch"/>
+            <line x1="152" y1="266" x2="204" y2="266" class="sketch"/>
+          </g>
+          <text class="t-dim" x="186" y="340" text-anchor="middle">notas · extratos · peças</text>
+          <path d="M280 244 L380 244" class="wire a-flow"/>
+          <g class="a-fade" style="animation-delay:.7s">
+            <circle cx="470" cy="140" r="30" class="sketch"/>
+            <g class="a-hand" style="transform-origin:470px 140px">
+              <line x1="470" y1="140" x2="470" y2="118" stroke="#C4704D" stroke-width="2.4"/>
+            </g>
+            <circle cx="470" cy="230" r="18" class="sketch"/>
+            <path d="M430 300 Q470 258 510 300" class="sketch"/>
+          </g>
+          <g class="a-fade" style="animation-delay:1.4s">
+            <text class="t-pain" x="600" y="196" font-size="17">✕</text>
+            <text class="t-b" x="626" y="196">8 minutos por documento</text>
+          </g>
+          <g class="a-fade" style="animation-delay:2s">
+            <text class="t-pain" x="600" y="240" font-size="17">✕</text>
+            <text class="t-b" x="626" y="240">retrabalho e redigitação</text>
+          </g>
+          <g class="a-fade" style="animation-delay:2.6s">
+            <text class="t-pain" x="600" y="284" font-size="17">✕</text>
+            <text class="t-b" x="626" y="284">erros silenciosos</text>
+          </g>
+          <text class="t-cap a-fade" style="animation-delay:3.4s" x="480" y="470" text-anchor="middle">Hoje: sua equipe gasta horas digitando o que uma IA lê em segundos.</text>
+        </g>
+
+        <!-- CENA 2 · entra a IA -->
+        <g class="scene" id="sc2">
+          <text class="t-mono" x="480" y="120" text-anchor="middle">PIPELINE DE AUTOMAÇÃO · RODA 24/7</text>
+          <g class="a-node" style="animation-delay:.2s">
+            <rect x="40" y="200" width="190" height="88" class="nodebox"/>
+            <text class="t-h" x="135" y="238" text-anchor="middle">Documentos</text>
+            <text class="t-dim" x="135" y="262" text-anchor="middle">notas, extratos, peças</text>
+          </g>
+          <path d="M230 244 L270 244" class="wire a-flow"/>
+          <circle cx="228" cy="244" r="4" fill="#E3B860" class="a-dot" style="animation-delay:.4s"/>
+          <g class="a-node" style="animation-delay:.9s">
+            <rect x="270" y="200" width="190" height="88" class="nodebox"/>
+            <text class="t-h" x="365" y="238" text-anchor="middle">IA lê e entende</text>
+            <text class="t-dim" x="365" y="262" text-anchor="middle">visão + linguagem natural</text>
+          </g>
+          <path d="M460 244 L500 244" class="wire a-flow"/>
+          <circle cx="458" cy="244" r="4" fill="#E3B860" class="a-dot" style="animation-delay:1.1s"/>
+          <g class="a-node" style="animation-delay:1.6s">
+            <rect x="500" y="200" width="190" height="88" class="nodebox"/>
+            <text class="t-h" x="595" y="238" text-anchor="middle">Classifica e valida</text>
+            <text class="t-dim" x="595" y="262" text-anchor="middle">com as regras do escritório</text>
+          </g>
+          <path d="M690 244 L730 244" class="wire a-flow"/>
+          <circle cx="688" cy="244" r="4" fill="#E3B860" class="a-dot" style="animation-delay:1.8s"/>
+          <g class="a-node" style="animation-delay:2.3s">
+            <rect x="730" y="200" width="190" height="88" class="nodebox"/>
+            <text class="t-h" x="825" y="238" text-anchor="middle">Lança no sistema</text>
+            <text class="t-dim" x="825" y="262" text-anchor="middle">ERP · contábil · jurídico</text>
+          </g>
+          <text class="t-cap a-fade" style="animation-delay:3s" x="480" y="440" text-anchor="middle">Da caixa de entrada ao sistema — em segundos, sem mãos humanas no caminho.</text>
+        </g>
+
+        <!-- CENA 3 · humano decide -->
+        <g class="scene" id="sc3">
+          <text class="t-mono" x="480" y="100" text-anchor="middle">ONDE ENTRA A SUA EQUIPE</text>
+          <g class="a-node" style="animation-delay:.2s">
+            <rect x="60" y="200" width="190" height="88" class="nodebox"/>
+            <text class="t-h" x="155" y="238" text-anchor="middle">IA processa</text>
+            <text class="t-dim" x="155" y="262" text-anchor="middle">cada documento</text>
+          </g>
+          <path d="M250 244 C420 244 460 168 600 168" class="wire a-flow"/>
+          <path d="M250 244 C420 244 460 320 600 320" class="wire a-flow"/>
+          <g class="a-node" style="animation-delay:1s">
+            <rect x="600" y="130" width="300" height="76" class="nodebox"/>
+            <circle cx="638" cy="168" r="15" fill="none" stroke="#E3B860" stroke-width="1.6"/>
+            <path d="M631 168 l5 6 l10 -12" stroke="#E3B860" stroke-width="2" fill="none"/>
+            <text class="t-h" x="668" y="164">≈ 95% · automático</text>
+            <text class="t-dim" x="668" y="186">conferido, lançado, arquivado</text>
+          </g>
+          <g class="a-node" style="animation-delay:1.7s">
+            <rect x="600" y="282" width="300" height="76" class="nodebox"/>
+            <circle cx="638" cy="313" r="9" class="sketch"/>
+            <path d="M624 342 Q638 326 652 342" class="sketch"/>
+            <text class="t-h" x="668" y="316">≈ 5% · exceções</text>
+            <text class="t-dim" x="668" y="338">vão para a sua equipe decidir</text>
+          </g>
+          <text class="t-cap a-fade" style="animation-delay:2.6s" x="480" y="470" text-anchor="middle">Sua equipe sai da digitação — e entra na decisão.</text>
+        </g>
+
+        <!-- CENA 4 · o ganho -->
+        <g class="scene" id="sc4">
+          <text class="t-mono" x="480" y="120" text-anchor="middle">O GANHO NO PROCESSO · MÉDIA APÓS 6 MESES</text>
+          <line x1="330" y1="200" x2="330" y2="330" stroke="rgba(120,200,165,.18)"/>
+          <line x1="630" y1="200" x2="630" y2="330" stroke="rgba(120,200,165,.18)"/>
+          <g class="a-fade" style="animation-delay:.2s">
+            <text class="t-big" x="180" y="256" text-anchor="middle" data-from="0" data-to="70" data-pre="−" data-suf="%">−0%</text>
+            <text class="t-b" x="180" y="296" text-anchor="middle">tempo em tarefas repetitivas</text>
+            <text class="t-dim" x="180" y="322" text-anchor="middle">120 h → 36 h por mês</text>
+          </g>
+          <g class="a-fade" style="animation-delay:.5s">
+            <text class="t-big" x="480" y="256" text-anchor="middle" data-from="4.20" data-to="0.60" data-pre="R$ " data-dec="2">R$ 4,20</text>
+            <text class="t-b" x="480" y="296" text-anchor="middle">custo por lançamento</text>
+            <text class="t-dim" x="480" y="322" text-anchor="middle">antes: R$ 4,20</text>
+          </g>
+          <g class="a-fade" style="animation-delay:.8s">
+            <text class="t-big" x="780" y="256" text-anchor="middle" data-from="0" data-to="3" data-suf="×">0×</text>
+            <text class="t-b" x="780" y="296" text-anchor="middle">capacidade de atendimento</text>
+            <text class="t-dim" x="780" y="322" text-anchor="middle">sem contratar mais ninguém</text>
+          </g>
+          <text class="t-cap a-fade" style="animation-delay:1.6s" x="480" y="440" text-anchor="middle">Números médios de referência — no diagnóstico, medimos os seus antes de prometer.</text>
+        </g>
+      </svg>
+
+      <button class="poster" aria-label="Assistir a explicação animada">
+        <span class="poster-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg></span>
+        <span class="poster-label">assistir · como funciona · 26 s</span>
+      </button>
+
+      <div class="controls">
+        <button class="ctrl-btn" aria-label="Reproduzir ou pausar">▶</button>
+        <div class="segs">
+          <button class="seg" aria-label="Cena 1: o fluxo manual"><i></i></button>
+          <button class="seg" aria-label="Cena 2: entra a IA"><i></i></button>
+          <button class="seg" aria-label="Cena 3: humano decide"><i></i></button>
+          <button class="seg" aria-label="Cena 4: o ganho"><i></i></button>
+        </div>
+        <span class="scene-title">diagrama · 26 s</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="method section-pad" id="metodo">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow"><span class="glyph">ᚋ</span> Método</p>
+      <h2>Quatro passos, gravados como se grava em pedra.</h2>
+      <p>Sem projetos infinitos. Cada etapa entrega valor antes da próxima começar — e o número de traços no glifo ogham marca onde você está.</p>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="ogham-num" data-strokes="1" aria-hidden="true"></div>
+        <span class="step-name">Passo um</span>
+        <h3>Escuta</h3>
+        <p>Mapeamos sua operação real — não a do organograma. Onde o tempo escorre, onde o erro nasce, onde a IA paga o próprio custo primeiro.</p>
+      </div>
+      <div class="step">
+        <div class="ogham-num" data-strokes="2" aria-hidden="true"></div>
+        <span class="step-name">Passo dois</span>
+        <h3>Desenho</h3>
+        <p>Arquitetura da solução: quais processos automatizar, quais sistemas integrar, quais salvaguardas de segurança e sigilo profissional aplicar.</p>
+      </div>
+      <div class="step">
+        <div class="ogham-num" data-strokes="3" aria-hidden="true"></div>
+        <span class="step-name">Passo três</span>
+        <h3>Implantação</h3>
+        <p>Entrega em ciclos curtos, começando pelo processo de maior impacto. Sua equipe valida cada ciclo antes de avançarmos.</p>
+      </div>
+      <div class="step">
+        <div class="ogham-num" data-strokes="4" aria-hidden="true"></div>
+        <span class="step-name">Passo quatro</span>
+        <h3>Iluminação</h3>
+        <p>Treinamento, acompanhamento e evolução contínua. A tecnologia fica; a dependência de consultoria, não.</p>
+      </div>
+    </div>
+    <p class="method-note reveal">— os glifos acima são numerais em <b>ogham</b>, o alfabeto de traços dos celtas: um traço, um passo.</p>
+  </div>
+</section>
+
+<section class="section-pad" id="porque">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow"><span class="glyph">ᚁ</span> Por que Imbas</p>
+      <h2>Resultados que se medem — e uma promessa que se cumpre.</h2>
+    </div>
+    <div class="proof-grid reveal">
+      <div class="proof">
+        <div class="num">70<small>%</small></div>
+        <p>menos tempo em tarefas repetitivas de lançamento, conferência e pesquisa nos primeiros seis meses.</p>
+      </div>
+      <div class="proof">
+        <div class="num">90<small> dias</small></div>
+        <p>até o primeiro processo automatizado em produção — valor entregue antes do projeto terminar.</p>
+      </div>
+      <div class="proof">
+        <div class="num">100<small>%</small></div>
+        <p>de aderência a sigilo profissional e LGPD: seus dados e os dos seus clientes nunca saem do seu controle.</p>
+      </div>
+    </div>
+    <div class="proof-quote reveal">
+      <blockquote>
+        <p>«A tecnologia não substitui o julgamento do contador nem a tese do advogado. Ela devolve a vocês o tempo para exercê-los.»</p>
+        <cite>— Princípio fundador da Imbas Tecnologia</cite>
+      </blockquote>
+      <img class="rings3d" src="render-rings.webp" alt="Três anéis entrelaçados em metal esmeralda e ouro — símbolo da trindade celta em 3D">
+    </div>
+  </div>
+</section>
+
+<section class="cta-final" id="contato">
+  <div class="wrap reveal">
+    <p class="eyebrow"><span class="glyph">ᚐ</span> Contato</p>
+    <h2>Pronto para acender o <span class="lit">imbas</span> do seu escritório?</h2>
+    <p>Agende um diagnóstico gratuito de 45 minutos. Saímos da conversa com um mapa honesto: o que automatizar primeiro, quanto custa e quanto retorna.</p>
+    <a class="btn btn-gold" href="mailto:contato@imbastecnologia.com.br?subject=Diagn%C3%B3stico%20gratuito%20%E2%80%94%20Imbas%20Tecnologia">Agendar diagnóstico gratuito</a>
+  </div>
+</section>
+
+<div class="ogham-strip" aria-hidden="true"><svg preserveAspectRatio="none"></svg></div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <a class="logo" href="#topo">
+        <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <g fill="none" stroke="#4BE8A0" stroke-width="1.6">
+            <circle cx="20" cy="14.5" r="8.5"/>
+            <circle cx="14.8" cy="23.5" r="8.5"/>
+            <circle cx="25.2" cy="23.5" r="8.5"/>
+          </g>
+          <circle cx="20" cy="20.5" r="2.2" fill="#E3B860"/>
+        </svg>
+        <span>
+          <span class="logo-name">Imbas <em>Tecnologia</em></span>
+        </span>
+      </a>
+      <p>Transformação digital com inteligência artificial para escritórios de contabilidade, advocacia, empresas de marketplace e de serviços.</p>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h4>Soluções</h4>
+        <ul>
+          <li><a href="#solucoes">Contabilidade</a></li>
+          <li><a href="#solucoes">Advocacia</a></li>
+          <li><a href="#solucoes">Marketplaces</a></li>
+          <li><a href="#solucoes">Sob medida</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#metodo">Método</a></li>
+          <li><a href="#porque">Por que Imbas</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Fale conosco</h4>
+        <ul>
+          <li><a href="mailto:contato@imbastecnologia.com.br">contato@imbastecnologia.com.br</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot-legal">
+    <div>
+      <span>© 2026 Imbas Tecnologia · Todos os direitos reservados</span>
+      <span>ᚔᚋᚁᚐᚄ · conhecimento que ilumina</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Scroll reveal ---------- */
+  var revealEls = document.querySelectorAll(".reveal");
+  if("IntersectionObserver" in window && !reduced){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    },{threshold:.12});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add("in"); });
+  }
+
+  /* ---------- Ogham numerals (n strokes = step n) ---------- */
+  document.querySelectorAll(".ogham-num").forEach(function(el){
+    var n = parseInt(el.getAttribute("data-strokes"),10) || 1;
+    var w = 20 + n*14, h = 64;
+    var s = '<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg">';
+    s += '<line x1="6" y1="0" x2="6" y2="'+h+'" stroke="#2BA872" stroke-width="2"/>';
+    for(var i=0;i<n;i++){
+      var y = h/2 - (n-1)*7 + i*14;
+      s += '<line x1="6" y1="'+y+'" x2="'+(6+n*11+14)+'" y2="'+y+'" stroke="#E3B860" stroke-width="2.5"/>';
+    }
+    s += '</svg>';
+    el.innerHTML = s;
+  });
+
+  /* ---------- Ogham divider strips ---------- */
+  document.querySelectorAll(".ogham-strip svg").forEach(function(svg, idx){
+    var W = 1600, H = 44, mid = H/2;
+    svg.setAttribute("viewBox","0 0 "+W+" "+H);
+    var out = '<line x1="0" y1="'+mid+'" x2="'+W+'" y2="'+mid+'" stroke="rgba(120,200,165,.25)" stroke-width="1"/>';
+    var x = 30, seed = 7 + idx*13;
+    function rnd(){ seed = (seed*9301+49297)%233280; return seed/233280; }
+    while(x < W-30){
+      var strokes = 1 + Math.floor(rnd()*5);
+      var kind = Math.floor(rnd()*3); /* 0: acima, 1: abaixo, 2: atravessa */
+      for(var i=0;i<strokes;i++){
+        var y1 = kind===0 ? mid-14 : (kind===1 ? mid : mid-11);
+        var y2 = kind===0 ? mid   : (kind===1 ? mid+14 : mid+11);
+        out += '<line x1="'+(x+i*7)+'" y1="'+y1+'" x2="'+(x+i*7)+'" y2="'+y2+'" stroke="rgba(75,232,160,.6)" stroke-width="2"/>';
+      }
+      x += strokes*7 + 26 + rnd()*30;
+    }
+    svg.innerHTML = out;
+  });
+
+  /* ---------- Hero canvas: HUD-triquetra ---------- */
+  var canvas = document.getElementById("sigil");
+  if(!canvas) return;
+  var ctx = canvas.getContext("2d");
+  var dpr = Math.min(window.devicePixelRatio||1, 2);
+  var size = 0;
+
+  function resize(){
+    var rect = canvas.parentElement.getBoundingClientRect();
+    size = Math.max(rect.width, 10);
+    canvas.width = size*dpr; canvas.height = size*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize();
+  window.addEventListener("resize", function(){ resize(); if(reduced) draw(0); });
+
+  var EMERALD = "75,232,160", GOLD = "227,184,96";
+
+  function draw(t){
+    var c = size/2, R = size*0.30, ringR = size*0.44;
+    ctx.clearRect(0,0,size,size);
+
+    /* outer HUD ring with ogham-like radial ticks, slowly rotating */
+    ctx.save();
+    ctx.translate(c,c);
+    ctx.rotate(t*0.00008);
+    ctx.strokeStyle = "rgba("+EMERALD+",.28)";
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(0,0,ringR,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,0,ringR-9,0,Math.PI*2); ctx.strokeStyle="rgba("+EMERALD+",.12)"; ctx.stroke();
+    for(var i=0;i<72;i++){
+      var a = i/72*Math.PI*2;
+      var long = (i%6===0);
+      var r1 = ringR-(long?16:8), r2 = ringR;
+      ctx.strokeStyle = long ? "rgba("+GOLD+",.55)" : "rgba("+EMERALD+",.3)";
+      ctx.lineWidth = long?1.6:1;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a)*r1, Math.sin(a)*r1);
+      ctx.lineTo(Math.cos(a)*r2, Math.sin(a)*r2);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    /* golden sparks riding the outer ring */
+    if(!reduced){
+      for(var s2=0;s2<3;s2++){
+        var a2 = t*0.0004 + s2*(Math.PI*2/3);
+        var x = c+Math.cos(a2)*ringR, y = c+Math.sin(a2)*ringR;
+        var g = ctx.createRadialGradient(x,y,0,x,y,9);
+        g.addColorStop(0,"rgba("+GOLD+",.9)");
+        g.addColorStop(1,"rgba("+GOLD+",0)");
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(x,y,9,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle = "rgba(255,244,220,.95)";
+        ctx.beginPath(); ctx.arc(x,y,1.8,0,Math.PI*2); ctx.fill();
+      }
+    }
+
+    /* soft golden halo behind the 3D knot */
+    var pulse = reduced ? 1 : (1 + 0.1*Math.sin(t*0.0009));
+    var halo = ctx.createRadialGradient(c,c,0,c,c,R*1.1*pulse);
+    halo.addColorStop(0,"rgba("+GOLD+",.16)");
+    halo.addColorStop(.6,"rgba("+EMERALD+",.07)");
+    halo.addColorStop(1,"rgba("+GOLD+",0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(c,c,R*1.1*pulse,0,Math.PI*2); ctx.fill();
+  }
+
+  if(reduced){
+    draw(0);
+  } else {
+    (function loop(t){ draw(t||0); requestAnimationFrame(loop); })(0);
+  }
+})();
+
+/* ---------- Vídeo-diagrama: motor do player ---------- */
+(function(){
+  "use strict";
+  var player = document.getElementById("player");
+  if(!player) return;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var scenes = [].slice.call(player.querySelectorAll(".scene"));
+  var segs   = [].slice.call(player.querySelectorAll(".seg i"));
+  var segBtns= [].slice.call(player.querySelectorAll(".seg"));
+  var titleEl= player.querySelector(".scene-title");
+  var poster = player.querySelector(".poster");
+  var btn    = player.querySelector(".ctrl-btn");
+  var durs   = [6000, 8000, 6000, 6000];
+  var titles = ["1/4 · o fluxo manual","2/4 · entra a ia","3/4 · humano decide","4/4 · o ganho"];
+  var idx = -1, playing = false, elapsed = 0, last = null, ended = false;
+
+  function fmt(v, dec){
+    return v.toFixed(dec).replace(".", ",");
+  }
+  function runCounters(scene){
+    [].slice.call(scene.querySelectorAll("[data-to]")).forEach(function(el){
+      var from = parseFloat(el.getAttribute("data-from") || "0");
+      var to   = parseFloat(el.getAttribute("data-to"));
+      var dec  = parseInt(el.getAttribute("data-dec") || "0", 10);
+      var pre  = el.getAttribute("data-pre") || "";
+      var suf  = el.getAttribute("data-suf") || "";
+      if(reduced){ el.textContent = pre + fmt(to, dec) + suf; return; }
+      var t0 = performance.now(), dur = 1500;
+      (function fr(n){
+        var p = Math.min((n - t0) / dur, 1);
+        var e = 1 - Math.pow(1 - p, 3);
+        el.textContent = pre + fmt(from + (to - from) * e, dec) + suf;
+        if(p < 1) requestAnimationFrame(fr);
+      })(t0);
+    });
+  }
+  function setScene(i){
+    idx = i; elapsed = 0; ended = false;
+    scenes.forEach(function(s, k){ s.classList.remove("active"); if(k === i){ void s.getBoundingClientRect(); s.classList.add("active"); } });
+    segs.forEach(function(s, k){ s.style.width = k < i ? "100%" : "0"; });
+    titleEl.textContent = titles[i];
+    if(i === 3) runCounters(scenes[3]);
+  }
+  function finish(){
+    ended = true; playing = false;
+    btn.textContent = "↻";
+    poster.style.display = "flex";
+    poster.querySelector(".poster-label").textContent = "rever a explicação";
+  }
+  function play(){
+    poster.style.display = "none";
+    if(idx < 0 || ended) setScene(0);
+    playing = true; btn.textContent = "❚❚";
+  }
+  function pause(){ playing = false; btn.textContent = "▶"; }
+
+  poster.addEventListener("click", play);
+  btn.addEventListener("click", function(){
+    if(idx < 0 || ended){ play(); return; }
+    playing ? pause() : (playing = true, btn.textContent = "❚❚");
+  });
+  segBtns.forEach(function(s, k){
+    s.addEventListener("click", function(){
+      poster.style.display = "none";
+      setScene(k);
+      playing = true; btn.textContent = "❚❚";
+    });
+  });
+
+  if(reduced){
+    poster.style.display = "none";
+    setScene(3);
+    segs.forEach(function(s){ s.style.width = "100%"; });
+    titleEl.textContent = titles[3] + " · use os capítulos";
+    return;
+  }
+
+  function tick(now){
+    if(last === null) last = now;
+    if(playing && !ended && idx >= 0){
+      elapsed += now - last;
+      var p = Math.min(elapsed / durs[idx], 1);
+      segs[idx].style.width = (p * 100) + "%";
+      if(p >= 1){
+        if(idx < scenes.length - 1) setScene(idx + 1);
+        else finish();
+      }
+    }
+    last = now;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(function(entries){
+      if(!entries[0].isIntersecting && playing) pause();
+    }, {threshold:.15}).observe(player);
+  }
+})();
+</script>
