@@ -36,6 +36,7 @@ export default function Footer() {
                 <li><Link href="/#metodo">Metodo</Link></li>
                 <li><Link href="/#porque">Por que Imbas</Link></li>
                 <li><Link href="/calculos">Calculadora Trabalhista</Link></li>
+              <li><Link href="/solucoes/reforma-tributaria">Reforma Tributaria</Link></li>
                 <li><a href="/#contato">Contato</a></li>
               </ul>
             </div>
