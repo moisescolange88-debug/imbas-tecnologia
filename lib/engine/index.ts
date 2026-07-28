@@ -1,0 +1,16 @@
+// Barrel export do motor de cálculos
+
+export * from './tables'
+export * from './tipos'
+export * from './common'
+export * from './inss'
+export * from './irrf'
+export * from './fgts'
+export * from './dsr'
+export * from './horas-extras'
+export * from './ferias'
+export * from './decimo-terceiro'
+export * from './salario'
+export * from './adicional-noturno'
+export * from './verbas-rescisorias'
+export * from './rescisao'
