@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import Nav from '@/components/layout/Nav'
+import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Imbas Tecnologia — Transformação Digital com IA',
@@ -9,7 +11,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <Nav />
+        <main style={{ minHeight: '80vh' }}>{children}</main>
+        <Footer />
+      </body>
     </html>
   )
 }
