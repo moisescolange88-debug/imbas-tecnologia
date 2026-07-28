@@ -76,7 +76,7 @@ nav{
   transition:background .25s,color .25s;
 }
 .nav-cta:hover{background:var(--emerald);color:var(--void) !important}
-@media(max-width:820px){.nav-links li:not(:last-child){display:none}}
+@media(max-width:820px){.nav-links li:nth-last-child(-n+2){display:list-item}.nav-links li:not(:nth-last-child(-n+2)){display:none}}
 @media(max-width:480px){
   .logo-sub{display:none}
   .logo-name{font-size:1.15rem;white-space:nowrap}

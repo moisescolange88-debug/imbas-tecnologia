@@ -64,6 +64,11 @@ export default function Nav() {
                   Calculadora<span className="cta-long"> trabalhista</span>
                 </Link>
               </li>
+              <li>
+                <Link href="/solucoes/reforma-tributaria" style={{ color: 'var(--emerald)', fontFamily: 'var(--mono)', fontSize: '.75rem', letterSpacing: '.14em', textTransform: 'uppercase', padding: '10px 20px', border: '1px solid var(--emerald-dim)', clipPath: 'polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))' }}>
+                  Reforma<span className="cta-long"> Tributaria</span>
+                </Link>
+              </li>
             </>
           )}
         </ul>
