@@ -573,6 +573,45 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FERRAMENTAS */}
+      <section className="section-pad" id="ferramentas">
+        <div className="wrap">
+          <div className="section-head reveal" style={{ maxWidth: 'none' }}>
+            <p className="eyebrow"><span className="glyph">ᚉ</span> Ferramentas</p>
+            <h2>Calculadoras profissionais para o escritorio.</h2>
+            <p>Ferramentas gratuitas baseadas na CLT, sumulas do TST e LC 214/2025 para calculos trabalhistas e projecao da Reforma Tributaria.</p>
+          </div>
+          <div className="cards reveal">
+            <article className="card">
+              <h3>Calculadora Trabalhista</h3>
+              <span className="card-tag">Rescisao, ferias, 13o, FGTS, HE, DSR</span>
+              <p>Calculo completo de verbas rescisorias para todos os 10 tipos de dispensa, salario liquido, ferias, 13o, horas extras e FGTS.</p>
+              <ul>
+                <li>Rescisao contratual com todos os tipos</li>
+                <li>INSS e IRRF progressivos (tabelas 2026)</li>
+                <li>Ferias + 1/3 constitucional + abono</li>
+              </ul>
+              <div style={{ marginTop: 24 }}>
+                <a className="btn btn-gold" href="/calculos">Abrir calculadora</a>
+              </div>
+            </article>
+            <article className="card">
+              <h3>Reforma Tributaria</h3>
+              <span className="card-tag">CBS, IBS, IS e transicao 2026-2033</span>
+              <p>Projecao completa do impacto da LC 214/2025 no seu negocio. Compare o sistema atual com o novo IVA Dual ano a ano.</p>
+              <ul>
+                <li>Cronograma de transicao ate 2033</li>
+                <li>Aliquotas reduzidas por categoria</li>
+                <li>Split payment, cashback e Imposto Seletivo</li>
+              </ul>
+              <div style={{ marginTop: 24 }}>
+                <a className="btn btn-gold" href="/solucoes/reforma-tributaria">Saiba mais</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="cta-final" id="contato">
         <div className="wrap reveal">
