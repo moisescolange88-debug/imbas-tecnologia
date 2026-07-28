@@ -44,7 +44,7 @@ export default function SalarioPage() {
             <Input name="dependentes" label="Dependentes (IRRF)" type="number" min="0" placeholder="0" />
             <select name="valeTransporte" className="calc-input calc-select calc-field" style={{ width: '100%', marginTop: 23 }}>
               <option value="nao">Vale Transporte: Não</option>
-              <option value="sim">Vale Transporte: Sim</option>
+              <option value="sim">Vale Transporte: Sim (6%)</option>
             </select>
           </div>
           <div style={{ marginTop: 8 }}>
