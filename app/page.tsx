@@ -27,10 +27,10 @@ function useOghamNumerals() {
       const w = 20 + n * 14
       const h = 64
       let s = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`
-      s += `<line x1="6" y1="0" x2="6" y2="${h}" stroke="#2BA872" stroke-width="2"/>`
+      s += `<line x1="6" y1="0" x2="6" y2="${h}" stroke="#15734A" stroke-width="2"/>`
       for (let i = 0; i < n; i++) {
         const y = h / 2 - (n - 1) * 7 + i * 14
-        s += `<line x1="6" y1="${y}" x2="${6 + n * 11 + 14}" y2="${y}" stroke="#E3B860" stroke-width="2.5"/>`
+        s += `<line x1="6" y1="${y}" x2="${6 + n * 11 + 14}" y2="${y}" stroke="#B4841C" stroke-width="2.5"/>`
       }
       s += '</svg>'
       el.innerHTML = s
@@ -278,11 +278,11 @@ export default function HomePage() {
           <div className="cards">
             <article className="card reveal">
               <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                <g fill="none" stroke="#4BE8A0" strokeWidth="1.5">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
                   <path d="M8 40 L8 22 M18 40 L18 14 M28 40 L28 26 M38 40 L38 10"/>
                   <path d="M4 44 L48 44"/>
                 </g>
-                <circle cx="38" cy="10" r="3" fill="#E3B860"/>
+                <circle cx="38" cy="10" r="3" fill="#B4841C"/>
               </svg>
               <h3>Contabilidade clarividente</h3>
               <span className="card-tag">Escritórios contábeis</span>
@@ -296,11 +296,11 @@ export default function HomePage() {
             </article>
             <article className="card reveal">
               <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                <g fill="none" stroke="#4BE8A0" strokeWidth="1.5">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
                   <path d="M26 6 L26 46 M10 14 L42 14"/>
                   <path d="M10 14 L4 28 A8 6 0 0 0 16 28 Z M42 14 L36 28 A8 6 0 0 0 48 28 Z"/>
                 </g>
-                <circle cx="26" cy="6" r="3" fill="#E3B860"/>
+                <circle cx="26" cy="6" r="3" fill="#B4841C"/>
               </svg>
               <h3>Advocacia aumentada</h3>
               <span className="card-tag">Escritórios de advocacia</span>
@@ -314,12 +314,12 @@ export default function HomePage() {
             </article>
             <article className="card reveal">
               <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                <g fill="none" stroke="#4BE8A0" strokeWidth="1.5">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
                   <circle cx="26" cy="26" r="17"/>
                   <path d="M26 9 L26 26 L38 34"/>
                   <path d="M9 26 L3 26 M43 26 L49 26 M26 43 L26 49"/>
                 </g>
-                <circle cx="26" cy="26" r="3" fill="#E3B860"/>
+                <circle cx="26" cy="26" r="3" fill="#B4841C"/>
               </svg>
               <h3>Transformação sob medida</h3>
               <span className="card-tag">Empresas de serviços</span>
@@ -333,13 +333,13 @@ export default function HomePage() {
             </article>
             <article className="card reveal">
               <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                <g fill="none" stroke="#4BE8A0" strokeWidth="1.5">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
                   <path d="M8 20 L11 8 L41 8 L44 20"/>
                   <path d="M8 20 Q11 26 14 20 Q17 26 20 20 Q23 26 26 20 Q29 26 32 20 Q35 26 38 20 Q41 26 44 20"/>
                   <path d="M11 24 L11 44 L41 44 L41 24"/>
                   <path d="M18 44 L18 32 L26 32 L26 44"/>
                 </g>
-                <circle cx="35" cy="34" r="3" fill="#E3B860"/>
+                <circle cx="35" cy="34" r="3" fill="#B4841C"/>
               </svg>
               <h3>Marketplace autônomo</h3>
               <span className="card-tag">Empresas de marketplace</span>
@@ -413,21 +413,21 @@ export default function HomePage() {
                   <text className="t-dim" x="135" y="262" textAnchor="middle">notas, extratos, peças</text>
                 </g>
                 <path d="M230 244 L270 244" className="wire a-flow"/>
-                <circle cx="228" cy="244" r="4" fill="#E3B860" className="a-dot" style={{ animationDelay: '.4s' }}/>
+                <circle cx="228" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '.4s' }}/>
                 <g className="a-node" style={{ animationDelay: '.9s' }}>
                   <rect x="270" y="200" width="190" height="88" className="nodebox"/>
                   <text className="t-h" x="365" y="238" textAnchor="middle">IA lê e entende</text>
                   <text className="t-dim" x="365" y="262" textAnchor="middle">visão + linguagem natural</text>
                 </g>
                 <path d="M460 244 L500 244" className="wire a-flow"/>
-                <circle cx="458" cy="244" r="4" fill="#E3B860" className="a-dot" style={{ animationDelay: '1.1s' }}/>
+                <circle cx="458" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '1.1s' }}/>
                 <g className="a-node" style={{ animationDelay: '1.6s' }}>
                   <rect x="500" y="200" width="190" height="88" className="nodebox"/>
                   <text className="t-h" x="595" y="238" textAnchor="middle">Classifica e valida</text>
                   <text className="t-dim" x="595" y="262" textAnchor="middle">com as regras do escritório</text>
                 </g>
                 <path d="M690 244 L730 244" className="wire a-flow"/>
-                <circle cx="688" cy="244" r="4" fill="#E3B860" className="a-dot" style={{ animationDelay: '1.8s' }}/>
+                <circle cx="688" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '1.8s' }}/>
                 <g className="a-node" style={{ animationDelay: '2.3s' }}>
                   <rect x="730" y="200" width="190" height="88" className="nodebox"/>
                   <text className="t-h" x="825" y="238" textAnchor="middle">Lança no sistema</text>
@@ -447,8 +447,8 @@ export default function HomePage() {
                 <path d="M250 244 C420 244 460 320 600 320" className="wire a-flow"/>
                 <g className="a-node" style={{ animationDelay: '1s' }}>
                   <rect x="600" y="130" width="300" height="76" className="nodebox"/>
-                  <circle cx="638" cy="168" r="15" fill="none" stroke="#E3B860" strokeWidth="1.6"/>
-                  <path d="M631 168 l5 6 l10 -12" stroke="#E3B860" strokeWidth="2" fill="none"/>
+                  <circle cx="638" cy="168" r="15" fill="none" stroke="#B4841C" strokeWidth="1.6"/>
+                  <path d="M631 168 l5 6 l10 -12" stroke="#B4841C" strokeWidth="2" fill="none"/>
                   <text className="t-h" x="668" y="164">≈ 95% · automático</text>
                   <text className="t-dim" x="668" y="186">conferido, lançado, arquivado</text>
                 </g>
@@ -578,34 +578,48 @@ export default function HomePage() {
         <div className="wrap">
           <div className="section-head reveal" style={{ maxWidth: 'none' }}>
             <p className="eyebrow"><span className="glyph">ᚉ</span> Ferramentas</p>
-            <h2>Calculadoras profissionais para o escritorio.</h2>
-            <p>Ferramentas gratuitas baseadas na CLT, sumulas do TST e LC 214/2025 para calculos trabalhistas e projecao da Reforma Tributaria.</p>
+            <h2>Calculadoras profissionais para o escritório.</h2>
+            <p>Ferramentas gratuitas baseadas na CLT, súmulas do TST e LC 214/2025 para cálculos trabalhistas e projeção da Reforma Tributária.</p>
           </div>
           <div className="cards reveal">
             <article className="card">
               <h3>Calculadora Trabalhista</h3>
-              <span className="card-tag">Rescisao, ferias, 13o, FGTS, HE, DSR</span>
-              <p>Calculo completo de verbas rescisorias para todos os 10 tipos de dispensa, salario liquido, ferias, 13o, horas extras e FGTS.</p>
+              <span className="card-tag">Rescisão, férias, 13º, FGTS, HE, DSR</span>
+              <p>Cálculo completo de verbas rescisórias para todos os 10 tipos de dispensa, salário líquido, férias, 13º, horas extras e FGTS.</p>
               <ul>
-                <li>Rescisao contratual com todos os tipos</li>
+                <li>Rescisão contratual com todos os tipos</li>
                 <li>INSS e IRRF progressivos (tabelas 2026)</li>
-                <li>Ferias + 1/3 constitucional + abono</li>
+                <li>Férias + 1/3 constitucional + abono</li>
               </ul>
               <div style={{ marginTop: 24 }}>
                 <a className="btn btn-gold" href="/calculos">Abrir calculadora</a>
               </div>
             </article>
             <article className="card">
-              <h3>Reforma Tributaria</h3>
-              <span className="card-tag">CBS, IBS, IS e transicao 2026-2033</span>
-              <p>Projecao completa do impacto da LC 214/2025 no seu negocio. Compare o sistema atual com o novo IVA Dual ano a ano.</p>
+              <h3>Reforma Tributária</h3>
+              <span className="card-tag">CBS, IBS, IS e transição 2026-2033</span>
+              <p>Projeção completa do impacto da LC 214/2025 no seu negócio. Compare o sistema atual com o novo IVA Dual ano a ano.</p>
               <ul>
-                <li>Cronograma de transicao ate 2033</li>
-                <li>Aliquotas reduzidas por categoria</li>
+                <li>Cronograma de transição até 2033</li>
+                <li>Alíquotas reduzidas por categoria</li>
                 <li>Split payment, cashback e Imposto Seletivo</li>
               </ul>
               <div style={{ marginTop: 24 }}>
                 <a className="btn btn-gold" href="/solucoes/reforma-tributaria">Saiba mais</a>
+              </div>
+            </article>
+            <article className="card">
+              <h3>Licenças ANVISA & CETESB</h3>
+              <span className="card-tag">Cotação com IA</span>
+              <p>Base de conhecimento viva sobre licenciamento sanitário e ambiental. A IA cruza o seu perfil com a base regulatória e devolve prazos, custos e licenças aplicáveis.</p>
+              <ul>
+                <li>Catálogo completo de AFE, CBPF, LO, LI, LP, Outorga, PGRS</li>
+                <li>Documentos, prazos e faixas de investimento</li>
+                <li>Cotação automática com prompt pronto para IA</li>
+              </ul>
+              <div style={{ marginTop: 24, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <a className="btn btn-gold" href="/conhecimento/licenciamento">Ver base</a>
+                <a className="btn btn-ghost" href="/conhecimento/cotacao">Gerar cotação</a>
               </div>
             </article>
           </div>

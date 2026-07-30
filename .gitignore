@@ -3,3 +3,6 @@
 .next
 node_modules
 .env*
+
+# Artefato incremental do TypeScript
+tsconfig.tsbuildinfo
