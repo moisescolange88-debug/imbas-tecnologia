@@ -100,7 +100,9 @@ export default function ReformaTributariaPage() {
                       <td className="td-valor">R$ {fmt(p.ibsDevido)}</td>
                       <td className="td-valor">R$ {fmt(p.totalNovo)}</td>
                       <td className="td-valor">R$ {fmt(p.totalAtual)}</td>
-                      <td className="td-valor" style={{ color: p.diferenca > 0 ? '#C4704D' : 'var(--emerald)' }}>
+                      {/* O sinal (+/-) carrega o significado sozinho; a cor
+                          só reforça. Ambos os tons passam AA sobre o branco. */}
+                      <td className="td-valor" style={{ color: p.diferenca > 0 ? 'var(--negative)' : 'var(--emerald-text)' }}>
                         {p.diferenca > 0 ? '+' : ''}R$ {fmt(p.diferenca)}
                       </td>
                     </tr>

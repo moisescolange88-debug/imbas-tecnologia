@@ -3,23 +3,6 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 
-function useScrollReveal() {
-  useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const els = document.querySelectorAll('.reveal')
-    if ('IntersectionObserver' in window && !reduced) {
-      const io = new IntersectionObserver(
-        entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } }),
-        { threshold: .12 }
-      )
-      els.forEach(el => io.observe(el))
-      return () => io.disconnect()
-    } else {
-      els.forEach(el => el.classList.add('in'))
-    }
-  }, [])
-}
-
 function useOghamNumerals() {
   useEffect(() => {
     document.querySelectorAll('.ogham-num').forEach(el => {
@@ -43,7 +26,7 @@ function useOghamStrips() {
     document.querySelectorAll('.ogham-strip svg').forEach((svg, idx) => {
       const W = 1600, H = 44, mid = H / 2
       svg.setAttribute('viewBox', `0 0 ${W} ${H}`)
-      let out = `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(120,200,165,.25)" stroke-width="1"/>`
+      let out = `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(31,154,102,.30)" stroke-width="1"/>`
       let x = 30
       let seed = 7 + idx * 13
       const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 }
@@ -53,12 +36,30 @@ function useOghamStrips() {
         for (let i = 0; i < strokes; i++) {
           const y1 = kind === 0 ? mid - 14 : (kind === 1 ? mid : mid - 11)
           const y2 = kind === 0 ? mid : (kind === 1 ? mid + 14 : mid + 11)
-          out += `<line x1="${x + i * 7}" y1="${y1}" x2="${x + i * 7}" y2="${y2}" stroke="rgba(75,232,160,.6)" stroke-width="2"/>`
+          out += `<line x1="${x + i * 7}" y1="${y1}" x2="${x + i * 7}" y2="${y2}" stroke="rgba(31,154,102,.65)" stroke-width="2"/>`
         }
         x += strokes * 7 + 26 + rnd() * 30
       }
       svg.innerHTML = out
     })
+  }, [])
+}
+
+function useHeroVideo() {
+  useEffect(() => {
+    const video = document.getElementById('hero-video') as HTMLVideoElement
+    if (!video) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      video.removeAttribute('autoplay'); video.pause(); return
+    }
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        entries => { entries[0].isIntersecting ? video.play().catch(() => {}) : video.pause() },
+        { threshold: .15 }
+      )
+      io.observe(video)
+      return () => io.disconnect()
+    }
   }, [])
 }
 
@@ -81,25 +82,28 @@ function useHeroCanvas() {
     resize()
     window.addEventListener('resize', () => { resize(); if (reduced) draw(0) })
 
-    const EMERALD = '75,232,160', GOLD = '227,184,96'
+    /* Sigilo em traço, sobre o branco: esmeralda na estrutura, ouro nas
+       marcas longas e nos pontos em órbita. Sem halo nem gradiente radial —
+       a profundidade vem da diferença de opacidade entre os traços. */
+    const EMERALD = '31,154,102', GOLD = '180,132,28'
 
     function draw(t: number) {
-      const c = size / 2, R = size * 0.30, ringR = size * 0.44
+      const c = size / 2, ringR = size * 0.44
       ctx.clearRect(0, 0, size, size)
 
       ctx.save()
       ctx.translate(c, c)
       ctx.rotate(t * 0.00008)
-      ctx.strokeStyle = `rgba(${EMERALD},.28)`
+      ctx.strokeStyle = `rgba(${EMERALD},.42)`
       ctx.lineWidth = 1
       ctx.beginPath(); ctx.arc(0, 0, ringR, 0, Math.PI * 2); ctx.stroke()
-      ctx.beginPath(); ctx.arc(0, 0, ringR - 9, 0, Math.PI * 2); ctx.strokeStyle = `rgba(${EMERALD},.12)`; ctx.stroke()
+      ctx.beginPath(); ctx.arc(0, 0, ringR - 9, 0, Math.PI * 2); ctx.strokeStyle = `rgba(${EMERALD},.18)`; ctx.stroke()
       for (let i = 0; i < 72; i++) {
         const a = i / 72 * Math.PI * 2
         const long = (i % 6 === 0)
         const r1 = ringR - (long ? 16 : 8), r2 = ringR
-        ctx.strokeStyle = long ? `rgba(${GOLD},.55)` : `rgba(${EMERALD},.3)`
-        ctx.lineWidth = long ? 1.6 : 1
+        ctx.strokeStyle = long ? `rgba(${GOLD},.8)` : `rgba(${EMERALD},.34)`
+        ctx.lineWidth = long ? 1.4 : 1
         ctx.beginPath()
         ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1)
         ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2)
@@ -111,23 +115,10 @@ function useHeroCanvas() {
         for (let s = 0; s < 3; s++) {
           const a = t * 0.0004 + s * (Math.PI * 2 / 3)
           const x = c + Math.cos(a) * ringR, y = c + Math.sin(a) * ringR
-          const g = ctx.createRadialGradient(x, y, 0, x, y, 9)
-          g.addColorStop(0, `rgba(${GOLD},.9)`)
-          g.addColorStop(1, `rgba(${GOLD},0)`)
-          ctx.fillStyle = g
-          ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI * 2); ctx.fill()
-          ctx.fillStyle = 'rgba(255,244,220,.95)'
-          ctx.beginPath(); ctx.arc(x, y, 1.8, 0, Math.PI * 2); ctx.fill()
+          ctx.fillStyle = `rgba(${GOLD},.95)`
+          ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill()
         }
       }
-
-      const pulse = reduced ? 1 : (1 + 0.1 * Math.sin(t * 0.0009))
-      const halo = ctx.createRadialGradient(c, c, 0, c, c, R * 1.1 * pulse)
-      halo.addColorStop(0, `rgba(${GOLD},.16)`)
-      halo.addColorStop(.6, `rgba(${EMERALD},.07)`)
-      halo.addColorStop(1, `rgba(${GOLD},0)`)
-      ctx.fillStyle = halo
-      ctx.beginPath(); ctx.arc(c, c, R * 1.1 * pulse, 0, Math.PI * 2); ctx.fill()
     }
 
     if (reduced) { draw(0); return }
@@ -221,10 +212,11 @@ function useExplainerPlayer() {
 }
 
 export default function HomePage() {
-  useScrollReveal()
+  // O reveal mora no MotionLayer do layout — vale para todas as rotas.
   useOghamNumerals()
   useOghamStrips()
   useHeroCanvas()
+  useHeroVideo()
   useExplainerPlayer()
 
   return (
@@ -241,10 +233,23 @@ export default function HomePage() {
               <a className="btn btn-ghost" href="#metodo">Conhecer o método</a>
             </div>
           </div>
-          <div className="hero-visual" aria-hidden="true">
-            <canvas id="sigil"></canvas>
-            <img className="knot3d" src="/render-knot.webp" alt="" />
-          </div>
+          <figure className="hero-visual hero-video">
+            <video
+              id="hero-video"
+              src="/hero-ia.mp4"
+              poster="/hero-ia-poster.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Vídeo: contador e robô com hologramas de dados e inteligência artificial no escritório"
+            />
+            <figcaption>
+              <span className="hero-video-dot" aria-hidden="true"></span>
+              IA ao lado da sua equipe — do lançamento à decisão
+            </figcaption>
+          </figure>
         </div>
         <div className="scroll-hint">descer</div>
       </header>
@@ -464,8 +469,8 @@ export default function HomePage() {
               {/* CENA 4 */}
               <g className="scene" id="sc4">
                 <text className="t-mono" x="480" y="120" textAnchor="middle">O GANHO NO PROCESSO · MÉDIA APÓS 6 MESES</text>
-                <line x1="330" y1="200" x2="330" y2="330" stroke="rgba(120,200,165,.18)"/>
-                <line x1="630" y1="200" x2="630" y2="330" stroke="rgba(120,200,165,.18)"/>
+                <line x1="330" y1="200" x2="330" y2="330" stroke="rgba(31,154,102,.18)"/>
+                <line x1="630" y1="200" x2="630" y2="330" stroke="rgba(31,154,102,.18)"/>
                 <g className="a-fade" style={{ animationDelay: '.2s' }}>
                   <text className="t-big" x="180" y="256" textAnchor="middle" data-from="0" data-to="70" data-pre="−" data-suf="%">−0%</text>
                   <text className="t-b" x="180" y="296" textAnchor="middle">tempo em tarefas repetitivas</text>
@@ -512,7 +517,12 @@ export default function HomePage() {
             <h2>Quatro passos, gravados como se grava em pedra.</h2>
             <p>Sem projetos infinitos. Cada etapa entrega valor antes da próxima começar — e o número de traços no glifo ogham marca onde você está.</p>
           </div>
-          <div className="steps reveal">
+          <div className="method-grid reveal">
+            <div className="method-visual" aria-hidden="true">
+              <canvas id="sigil"></canvas>
+              <img className="knot3d" src="/render-knot.webp" alt="" />
+            </div>
+          <div className="steps">
             <div className="step">
               <div className="ogham-num" data-strokes="1" aria-hidden="true"></div>
               <span className="step-name">Passo um</span>
@@ -537,6 +547,7 @@ export default function HomePage() {
               <h3>Iluminação</h3>
               <p>Treinamento, acompanhamento e evolução contínua. A tecnologia fica; a dependência de consultoria, não.</p>
             </div>
+          </div>
           </div>
           <p className="method-note reveal">— os glifos acima são numerais em <b>ogham</b>, o alfabeto de traços dos celtas: um traço, um passo.</p>
         </div>

@@ -1,0 +1,105 @@
+{
+  "id": "001-price-tac-seguro",
+  "descricao": "Financiamento Price, 6 parcelas, com TAC e seguro mensal. Excesso de R$ 37,90 cobrado nas tres primeiras parcelas. Atualizacao por indice sintetico ate 2019-12.",
+  "premissas": {
+    "principal": 30000,
+    "prazo": 6,
+    "taxaPeriodo": 0.0249,
+    "sistema": "price",
+    "capitalizacao": "composta",
+    "tac": 850,
+    "seguroMensal": 42.5,
+    "origem": "Cláusula 4ª, fls. 28/31"
+  },
+  "lancamentos": [
+    {
+      "parcela": 1,
+      "total": 6375.08,
+      "status": "pago",
+      "fonte": "fls. 52"
+    },
+    {
+      "parcela": 2,
+      "total": 5525.08,
+      "status": "pago",
+      "fonte": "fls. 52"
+    },
+    {
+      "parcela": 3,
+      "total": 5525.08,
+      "status": "pago",
+      "fonte": "fls. 52"
+    },
+    {
+      "parcela": 4,
+      "total": 5487.18,
+      "status": "pago",
+      "fonte": "fls. 52"
+    },
+    {
+      "parcela": 5,
+      "total": 5487.18,
+      "status": "pago",
+      "fonte": "fls. 52"
+    },
+    {
+      "parcela": 6,
+      "total": 5487.16,
+      "status": "pago",
+      "fonte": "fls. 52"
+    }
+  ],
+  "atualizacao": {
+    "premissas": {
+      "correcao": {
+        "nome": "ÍNDICE-DEMO",
+        "fonte": "série sintética — caso de demonstração",
+        "tipo": "variacao",
+        "valores": {
+          "2019-01": 0.0042,
+          "2019-02": 0.0042,
+          "2019-03": 0.0042,
+          "2019-04": 0.0042,
+          "2019-05": 0.0042,
+          "2019-06": 0.0042,
+          "2019-07": 0.0042,
+          "2019-08": 0.0042,
+          "2019-09": 0.0042,
+          "2019-10": 0.0042,
+          "2019-11": 0.0042,
+          "2019-12": 0.0042
+        }
+      },
+      "jurosTaxaMensal": 0.01,
+      "regimeJuros": "simples",
+      "baseDosJuros": "valor-corrigido",
+      "multaPercentual": 0.02,
+      "baseDaMulta": "valor-corrigido",
+      "fundamento": "Cláusula 9ª, fls. 33"
+    },
+    "competencias": {
+      "1": "2019-01",
+      "2": "2019-02",
+      "3": "2019-03",
+      "4": "2019-04",
+      "5": "2019-05",
+      "6": "2019-06"
+    },
+    "dataBase": "2019-12"
+  },
+  "esperado": {
+    "motorVersao": "1.0.0",
+    "impressaoPremissas": "a4917ee5",
+    "totalAmortizacao": 30000,
+    "totalJuros": 2668.06,
+    "totalEncargos": 1105,
+    "totalParcelas": 33773.06,
+    "primeiraParcelaTotal": 6337.18,
+    "ultimoSaldoFinal": 0,
+    "totalDevido": 33773.06,
+    "totalCobrado": 33886.76,
+    "diferencaNominal": 113.7,
+    "diferencaAtualizada": 132.8,
+    "sentido": "excesso-cobrado"
+  }
+}

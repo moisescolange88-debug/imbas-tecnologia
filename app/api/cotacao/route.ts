@@ -34,7 +34,7 @@ const PROVIDERS: Record<string, { baseUrl: string; model: string; header?: (key:
   },
   anthropic: {
     baseUrl: 'https://api.anthropic.com/v1',
-    model: 'claude-3-5-sonnet-20240620',
+    model: 'claude-sonnet-5',
   },
   gemini: {
     baseUrl: 'https://api.generativelanguage.googleapis.com/v1beta',
@@ -77,6 +77,12 @@ async function chamarIA(promptSistema: string, mensagem: string, opts: { provide
       body: JSON.stringify({
         model: config.model,
         max_tokens: 1500,
+        // O Sonnet 5 pensa por padrão quando `thinking` é omitido, e max_tokens
+        // limita thinking + resposta juntos — 1500 truncaria a mensagem no meio.
+        // Mensagem comercial curta não precisa de raciocínio: desligado sai mais
+        // barato e mais rápido.
+        thinking: { type: 'disabled' },
+        output_config: { effort: 'low' },
         system: promptSistema,
         messages: [{ role: 'user', content: mensagem }],
       }),

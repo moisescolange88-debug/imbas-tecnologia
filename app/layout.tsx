@@ -1,7 +1,27 @@
 import type { Metadata, Viewport } from 'next'
+import { Cormorant_Garamond, Inter } from 'next/font/google'
 import './globals.css'
 import Nav from '@/components/layout/Nav'
 import Footer from '@/components/layout/Footer'
+import MotionLayer from '@/components/motion/MotionLayer'
+
+/* PP Eiko e Basis Grotesque Pro são licenciadas. Os substitutos abaixo são os
+   recomendados pelo sistema: serifada ultraleve (peso 300) para o display e
+   neogrotesca para todo o resto. Trocar por PP Eiko/Basis é só mexer aqui. */
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
+  display: 'swap',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  variable: '--font-inter',
+  display: 'swap',
+})
 
 const SITE = 'https://imbas-tecnologia.vercel.app'
 
@@ -34,7 +54,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${cormorant.variable} ${inter.variable}`}>
       <body>
         {/* .reveal parte de opacity:0 e só aparece via IntersectionObserver.
             Sem JS, o site inteiro ficaria em branco — este reset garante o conteúdo. */}
@@ -46,6 +66,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
+        {/* Depois do conteúdo: a camada varre o DOM já montado e vale para
+            todas as rotas — inclusive as que tinham .reveal sem observer. */}
+        <MotionLayer />
       </body>
     </html>
   )
