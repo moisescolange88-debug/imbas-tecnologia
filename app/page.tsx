@@ -3,23 +3,6 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 
-function useScrollReveal() {
-  useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const els = document.querySelectorAll('.reveal')
-    if ('IntersectionObserver' in window && !reduced) {
-      const io = new IntersectionObserver(
-        entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } }),
-        { threshold: .12 }
-      )
-      els.forEach(el => io.observe(el))
-      return () => io.disconnect()
-    } else {
-      els.forEach(el => el.classList.add('in'))
-    }
-  }, [])
-}
-
 function useOghamNumerals() {
   useEffect(() => {
     document.querySelectorAll('.ogham-num').forEach(el => {
@@ -27,10 +10,10 @@ function useOghamNumerals() {
       const w = 20 + n * 14
       const h = 64
       let s = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`
-      s += `<line x1="6" y1="0" x2="6" y2="${h}" stroke="#2BA872" stroke-width="2"/>`
+      s += `<line x1="6" y1="0" x2="6" y2="${h}" stroke="#15734A" stroke-width="2"/>`
       for (let i = 0; i < n; i++) {
         const y = h / 2 - (n - 1) * 7 + i * 14
-        s += `<line x1="6" y1="${y}" x2="${6 + n * 11 + 14}" y2="${y}" stroke="#E3B860" stroke-width="2.5"/>`
+        s += `<line x1="6" y1="${y}" x2="${6 + n * 11 + 14}" y2="${y}" stroke="#B4841C" stroke-width="2.5"/>`
       }
       s += '</svg>'
       el.innerHTML = s
@@ -43,7 +26,7 @@ function useOghamStrips() {
     document.querySelectorAll('.ogham-strip svg').forEach((svg, idx) => {
       const W = 1600, H = 44, mid = H / 2
       svg.setAttribute('viewBox', `0 0 ${W} ${H}`)
-      let out = `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(120,200,165,.25)" stroke-width="1"/>`
+      let out = `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(31,154,102,.30)" stroke-width="1"/>`
       let x = 30
       let seed = 7 + idx * 13
       const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 }
@@ -53,12 +36,30 @@ function useOghamStrips() {
         for (let i = 0; i < strokes; i++) {
           const y1 = kind === 0 ? mid - 14 : (kind === 1 ? mid : mid - 11)
           const y2 = kind === 0 ? mid : (kind === 1 ? mid + 14 : mid + 11)
-          out += `<line x1="${x + i * 7}" y1="${y1}" x2="${x + i * 7}" y2="${y2}" stroke="rgba(75,232,160,.6)" stroke-width="2"/>`
+          out += `<line x1="${x + i * 7}" y1="${y1}" x2="${x + i * 7}" y2="${y2}" stroke="rgba(31,154,102,.65)" stroke-width="2"/>`
         }
         x += strokes * 7 + 26 + rnd() * 30
       }
       svg.innerHTML = out
     })
+  }, [])
+}
+
+function useHeroVideo() {
+  useEffect(() => {
+    const video = document.getElementById('hero-video') as HTMLVideoElement
+    if (!video) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      video.removeAttribute('autoplay'); video.pause(); return
+    }
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        entries => { entries[0].isIntersecting ? video.play().catch(() => {}) : video.pause() },
+        { threshold: .15 }
+      )
+      io.observe(video)
+      return () => io.disconnect()
+    }
   }, [])
 }
 
@@ -81,25 +82,28 @@ function useHeroCanvas() {
     resize()
     window.addEventListener('resize', () => { resize(); if (reduced) draw(0) })
 
-    const EMERALD = '75,232,160', GOLD = '227,184,96'
+    /* Sigilo em traço, sobre o branco: esmeralda na estrutura, ouro nas
+       marcas longas e nos pontos em órbita. Sem halo nem gradiente radial —
+       a profundidade vem da diferença de opacidade entre os traços. */
+    const EMERALD = '31,154,102', GOLD = '180,132,28'
 
     function draw(t: number) {
-      const c = size / 2, R = size * 0.30, ringR = size * 0.44
+      const c = size / 2, ringR = size * 0.44
       ctx.clearRect(0, 0, size, size)
 
       ctx.save()
       ctx.translate(c, c)
       ctx.rotate(t * 0.00008)
-      ctx.strokeStyle = `rgba(${EMERALD},.28)`
+      ctx.strokeStyle = `rgba(${EMERALD},.42)`
       ctx.lineWidth = 1
       ctx.beginPath(); ctx.arc(0, 0, ringR, 0, Math.PI * 2); ctx.stroke()
-      ctx.beginPath(); ctx.arc(0, 0, ringR - 9, 0, Math.PI * 2); ctx.strokeStyle = `rgba(${EMERALD},.12)`; ctx.stroke()
+      ctx.beginPath(); ctx.arc(0, 0, ringR - 9, 0, Math.PI * 2); ctx.strokeStyle = `rgba(${EMERALD},.18)`; ctx.stroke()
       for (let i = 0; i < 72; i++) {
         const a = i / 72 * Math.PI * 2
         const long = (i % 6 === 0)
         const r1 = ringR - (long ? 16 : 8), r2 = ringR
-        ctx.strokeStyle = long ? `rgba(${GOLD},.55)` : `rgba(${EMERALD},.3)`
-        ctx.lineWidth = long ? 1.6 : 1
+        ctx.strokeStyle = long ? `rgba(${GOLD},.8)` : `rgba(${EMERALD},.34)`
+        ctx.lineWidth = long ? 1.4 : 1
         ctx.beginPath()
         ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1)
         ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2)
@@ -111,23 +115,10 @@ function useHeroCanvas() {
         for (let s = 0; s < 3; s++) {
           const a = t * 0.0004 + s * (Math.PI * 2 / 3)
           const x = c + Math.cos(a) * ringR, y = c + Math.sin(a) * ringR
-          const g = ctx.createRadialGradient(x, y, 0, x, y, 9)
-          g.addColorStop(0, `rgba(${GOLD},.9)`)
-          g.addColorStop(1, `rgba(${GOLD},0)`)
-          ctx.fillStyle = g
-          ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI * 2); ctx.fill()
-          ctx.fillStyle = 'rgba(255,244,220,.95)'
-          ctx.beginPath(); ctx.arc(x, y, 1.8, 0, Math.PI * 2); ctx.fill()
+          ctx.fillStyle = `rgba(${GOLD},.95)`
+          ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill()
         }
       }
-
-      const pulse = reduced ? 1 : (1 + 0.1 * Math.sin(t * 0.0009))
-      const halo = ctx.createRadialGradient(c, c, 0, c, c, R * 1.1 * pulse)
-      halo.addColorStop(0, `rgba(${GOLD},.16)`)
-      halo.addColorStop(.6, `rgba(${EMERALD},.07)`)
-      halo.addColorStop(1, `rgba(${GOLD},0)`)
-      ctx.fillStyle = halo
-      ctx.beginPath(); ctx.arc(c, c, R * 1.1 * pulse, 0, Math.PI * 2); ctx.fill()
     }
 
     if (reduced) { draw(0); return }
@@ -221,10 +212,11 @@ function useExplainerPlayer() {
 }
 
 export default function HomePage() {
-  useScrollReveal()
+  // O reveal mora no MotionLayer do layout — vale para todas as rotas.
   useOghamNumerals()
   useOghamStrips()
   useHeroCanvas()
+  useHeroVideo()
   useExplainerPlayer()
 
   return (
@@ -241,10 +233,23 @@ export default function HomePage() {
               <a className="btn btn-ghost" href="#metodo">Conhecer o método</a>
             </div>
           </div>
-          <div className="hero-visual" aria-hidden="true">
-            <canvas id="sigil"></canvas>
-            <img className="knot3d" src="/render-knot.webp" alt="" />
-          </div>
+          <figure className="hero-visual hero-video">
+            <video
+              id="hero-video"
+              src="/hero-ia.mp4"
+              poster="/hero-ia-poster.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Vídeo: contador e robô com hologramas de dados e inteligência artificial no escritório"
+            />
+            <figcaption>
+              <span className="hero-video-dot" aria-hidden="true"></span>
+              IA ao lado da sua equipe — do lançamento à decisão
+            </figcaption>
+          </figure>
         </div>
         <div className="scroll-hint">descer</div>
       </header>
@@ -278,11 +283,11 @@ export default function HomePage() {
           <div className="cards">
             <article className="card reveal">
               <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                <g fill="none" stroke="#4BE8A0" strokeWidth="1.5">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
                   <path d="M8 40 L8 22 M18 40 L18 14 M28 40 L28 26 M38 40 L38 10"/>
                   <path d="M4 44 L48 44"/>
                 </g>
-                <circle cx="38" cy="10" r="3" fill="#E3B860"/>
+                <circle cx="38" cy="10" r="3" fill="#B4841C"/>
               </svg>
               <h3>Contabilidade clarividente</h3>
               <span className="card-tag">Escritórios contábeis</span>
@@ -296,11 +301,11 @@ export default function HomePage() {
             </article>
             <article className="card reveal">
               <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                <g fill="none" stroke="#4BE8A0" strokeWidth="1.5">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
                   <path d="M26 6 L26 46 M10 14 L42 14"/>
                   <path d="M10 14 L4 28 A8 6 0 0 0 16 28 Z M42 14 L36 28 A8 6 0 0 0 48 28 Z"/>
                 </g>
-                <circle cx="26" cy="6" r="3" fill="#E3B860"/>
+                <circle cx="26" cy="6" r="3" fill="#B4841C"/>
               </svg>
               <h3>Advocacia aumentada</h3>
               <span className="card-tag">Escritórios de advocacia</span>
@@ -314,12 +319,12 @@ export default function HomePage() {
             </article>
             <article className="card reveal">
               <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                <g fill="none" stroke="#4BE8A0" strokeWidth="1.5">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
                   <circle cx="26" cy="26" r="17"/>
                   <path d="M26 9 L26 26 L38 34"/>
                   <path d="M9 26 L3 26 M43 26 L49 26 M26 43 L26 49"/>
                 </g>
-                <circle cx="26" cy="26" r="3" fill="#E3B860"/>
+                <circle cx="26" cy="26" r="3" fill="#B4841C"/>
               </svg>
               <h3>Transformação sob medida</h3>
               <span className="card-tag">Empresas de serviços</span>
@@ -333,13 +338,13 @@ export default function HomePage() {
             </article>
             <article className="card reveal">
               <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                <g fill="none" stroke="#4BE8A0" strokeWidth="1.5">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
                   <path d="M8 20 L11 8 L41 8 L44 20"/>
                   <path d="M8 20 Q11 26 14 20 Q17 26 20 20 Q23 26 26 20 Q29 26 32 20 Q35 26 38 20 Q41 26 44 20"/>
                   <path d="M11 24 L11 44 L41 44 L41 24"/>
                   <path d="M18 44 L18 32 L26 32 L26 44"/>
                 </g>
-                <circle cx="35" cy="34" r="3" fill="#E3B860"/>
+                <circle cx="35" cy="34" r="3" fill="#B4841C"/>
               </svg>
               <h3>Marketplace autônomo</h3>
               <span className="card-tag">Empresas de marketplace</span>
@@ -413,21 +418,21 @@ export default function HomePage() {
                   <text className="t-dim" x="135" y="262" textAnchor="middle">notas, extratos, peças</text>
                 </g>
                 <path d="M230 244 L270 244" className="wire a-flow"/>
-                <circle cx="228" cy="244" r="4" fill="#E3B860" className="a-dot" style={{ animationDelay: '.4s' }}/>
+                <circle cx="228" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '.4s' }}/>
                 <g className="a-node" style={{ animationDelay: '.9s' }}>
                   <rect x="270" y="200" width="190" height="88" className="nodebox"/>
                   <text className="t-h" x="365" y="238" textAnchor="middle">IA lê e entende</text>
                   <text className="t-dim" x="365" y="262" textAnchor="middle">visão + linguagem natural</text>
                 </g>
                 <path d="M460 244 L500 244" className="wire a-flow"/>
-                <circle cx="458" cy="244" r="4" fill="#E3B860" className="a-dot" style={{ animationDelay: '1.1s' }}/>
+                <circle cx="458" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '1.1s' }}/>
                 <g className="a-node" style={{ animationDelay: '1.6s' }}>
                   <rect x="500" y="200" width="190" height="88" className="nodebox"/>
                   <text className="t-h" x="595" y="238" textAnchor="middle">Classifica e valida</text>
                   <text className="t-dim" x="595" y="262" textAnchor="middle">com as regras do escritório</text>
                 </g>
                 <path d="M690 244 L730 244" className="wire a-flow"/>
-                <circle cx="688" cy="244" r="4" fill="#E3B860" className="a-dot" style={{ animationDelay: '1.8s' }}/>
+                <circle cx="688" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '1.8s' }}/>
                 <g className="a-node" style={{ animationDelay: '2.3s' }}>
                   <rect x="730" y="200" width="190" height="88" className="nodebox"/>
                   <text className="t-h" x="825" y="238" textAnchor="middle">Lança no sistema</text>
@@ -447,8 +452,8 @@ export default function HomePage() {
                 <path d="M250 244 C420 244 460 320 600 320" className="wire a-flow"/>
                 <g className="a-node" style={{ animationDelay: '1s' }}>
                   <rect x="600" y="130" width="300" height="76" className="nodebox"/>
-                  <circle cx="638" cy="168" r="15" fill="none" stroke="#E3B860" strokeWidth="1.6"/>
-                  <path d="M631 168 l5 6 l10 -12" stroke="#E3B860" strokeWidth="2" fill="none"/>
+                  <circle cx="638" cy="168" r="15" fill="none" stroke="#B4841C" strokeWidth="1.6"/>
+                  <path d="M631 168 l5 6 l10 -12" stroke="#B4841C" strokeWidth="2" fill="none"/>
                   <text className="t-h" x="668" y="164">≈ 95% · automático</text>
                   <text className="t-dim" x="668" y="186">conferido, lançado, arquivado</text>
                 </g>
@@ -464,8 +469,8 @@ export default function HomePage() {
               {/* CENA 4 */}
               <g className="scene" id="sc4">
                 <text className="t-mono" x="480" y="120" textAnchor="middle">O GANHO NO PROCESSO · MÉDIA APÓS 6 MESES</text>
-                <line x1="330" y1="200" x2="330" y2="330" stroke="rgba(120,200,165,.18)"/>
-                <line x1="630" y1="200" x2="630" y2="330" stroke="rgba(120,200,165,.18)"/>
+                <line x1="330" y1="200" x2="330" y2="330" stroke="rgba(31,154,102,.18)"/>
+                <line x1="630" y1="200" x2="630" y2="330" stroke="rgba(31,154,102,.18)"/>
                 <g className="a-fade" style={{ animationDelay: '.2s' }}>
                   <text className="t-big" x="180" y="256" textAnchor="middle" data-from="0" data-to="70" data-pre="−" data-suf="%">−0%</text>
                   <text className="t-b" x="180" y="296" textAnchor="middle">tempo em tarefas repetitivas</text>
@@ -512,7 +517,12 @@ export default function HomePage() {
             <h2>Quatro passos, gravados como se grava em pedra.</h2>
             <p>Sem projetos infinitos. Cada etapa entrega valor antes da próxima começar — e o número de traços no glifo ogham marca onde você está.</p>
           </div>
-          <div className="steps reveal">
+          <div className="method-grid reveal">
+            <div className="method-visual" aria-hidden="true">
+              <canvas id="sigil"></canvas>
+              <img className="knot3d" src="/render-knot.webp" alt="" />
+            </div>
+          <div className="steps">
             <div className="step">
               <div className="ogham-num" data-strokes="1" aria-hidden="true"></div>
               <span className="step-name">Passo um</span>
@@ -537,6 +547,7 @@ export default function HomePage() {
               <h3>Iluminação</h3>
               <p>Treinamento, acompanhamento e evolução contínua. A tecnologia fica; a dependência de consultoria, não.</p>
             </div>
+          </div>
           </div>
           <p className="method-note reveal">— os glifos acima são numerais em <b>ogham</b>, o alfabeto de traços dos celtas: um traço, um passo.</p>
         </div>
@@ -578,34 +589,48 @@ export default function HomePage() {
         <div className="wrap">
           <div className="section-head reveal" style={{ maxWidth: 'none' }}>
             <p className="eyebrow"><span className="glyph">ᚉ</span> Ferramentas</p>
-            <h2>Calculadoras profissionais para o escritorio.</h2>
-            <p>Ferramentas gratuitas baseadas na CLT, sumulas do TST e LC 214/2025 para calculos trabalhistas e projecao da Reforma Tributaria.</p>
+            <h2>Calculadoras profissionais para o escritório.</h2>
+            <p>Ferramentas gratuitas baseadas na CLT, súmulas do TST e LC 214/2025 para cálculos trabalhistas e projeção da Reforma Tributária.</p>
           </div>
           <div className="cards reveal">
             <article className="card">
               <h3>Calculadora Trabalhista</h3>
-              <span className="card-tag">Rescisao, ferias, 13o, FGTS, HE, DSR</span>
-              <p>Calculo completo de verbas rescisorias para todos os 10 tipos de dispensa, salario liquido, ferias, 13o, horas extras e FGTS.</p>
+              <span className="card-tag">Rescisão, férias, 13º, FGTS, HE, DSR</span>
+              <p>Cálculo completo de verbas rescisórias para todos os 10 tipos de dispensa, salário líquido, férias, 13º, horas extras e FGTS.</p>
               <ul>
-                <li>Rescisao contratual com todos os tipos</li>
+                <li>Rescisão contratual com todos os tipos</li>
                 <li>INSS e IRRF progressivos (tabelas 2026)</li>
-                <li>Ferias + 1/3 constitucional + abono</li>
+                <li>Férias + 1/3 constitucional + abono</li>
               </ul>
               <div style={{ marginTop: 24 }}>
                 <a className="btn btn-gold" href="/calculos">Abrir calculadora</a>
               </div>
             </article>
             <article className="card">
-              <h3>Reforma Tributaria</h3>
-              <span className="card-tag">CBS, IBS, IS e transicao 2026-2033</span>
-              <p>Projecao completa do impacto da LC 214/2025 no seu negocio. Compare o sistema atual com o novo IVA Dual ano a ano.</p>
+              <h3>Reforma Tributária</h3>
+              <span className="card-tag">CBS, IBS, IS e transição 2026-2033</span>
+              <p>Projeção completa do impacto da LC 214/2025 no seu negócio. Compare o sistema atual com o novo IVA Dual ano a ano.</p>
               <ul>
-                <li>Cronograma de transicao ate 2033</li>
-                <li>Aliquotas reduzidas por categoria</li>
+                <li>Cronograma de transição até 2033</li>
+                <li>Alíquotas reduzidas por categoria</li>
                 <li>Split payment, cashback e Imposto Seletivo</li>
               </ul>
               <div style={{ marginTop: 24 }}>
                 <a className="btn btn-gold" href="/solucoes/reforma-tributaria">Saiba mais</a>
+              </div>
+            </article>
+            <article className="card">
+              <h3>Licenças ANVISA & CETESB</h3>
+              <span className="card-tag">Cotação com IA</span>
+              <p>Base de conhecimento viva sobre licenciamento sanitário e ambiental. A IA cruza o seu perfil com a base regulatória e devolve prazos, custos e licenças aplicáveis.</p>
+              <ul>
+                <li>Catálogo completo de AFE, CBPF, LO, LI, LP, Outorga, PGRS</li>
+                <li>Documentos, prazos e faixas de investimento</li>
+                <li>Cotação automática com prompt pronto para IA</li>
+              </ul>
+              <div style={{ marginTop: 24, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <a className="btn btn-gold" href="/conhecimento/licenciamento">Ver base</a>
+                <a className="btn btn-ghost" href="/conhecimento/cotacao">Gerar cotação</a>
               </div>
             </article>
           </div>
