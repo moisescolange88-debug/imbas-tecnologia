@@ -24,27 +24,29 @@ export default function Footer() {
             <div className="foot-col">
               <h4>Soluções</h4>
               <ul>
-                <li><Link href="/#solucoes">Contabilidade</Link></li>
-                <li><Link href="/#solucoes">Advocacia</Link></li>
-                <li><Link href="/#solucoes">Marketplaces</Link></li>
-                <li><Link href="/#solucoes">Sob medida</Link></li>
+                <li><Link href="/solucoes/dossie-societario">Dossiê Societário</Link></li>
+                <li><Link href="/solucoes/gestao-documental">Gestão Documental</Link></li>
+                <li><Link href="/solucoes/reforma-tributaria">Reforma Tributária</Link></li>
+                <li><Link href="/#solucoes">Contabilidade com IA</Link></li>
+                <li><Link href="/#solucoes">Advocacia Aumentada</Link></li>
+                <li><Link href="/#solucoes">Marketplaces Autônomos</Link></li>
               </ul>
             </div>
             <div className="foot-col">
-              <h4>Empresa</h4>
+              <h4>Ferramentas & Empresa</h4>
               <ul>
-                <li><Link href="/#metodo">Método</Link></li>
-                <li><Link href="/#porque">Por que Imbas</Link></li>
                 <li><Link href="/calculos">Calculadora Trabalhista</Link></li>
                 <li><Link href="/conhecimento/licenciamento">Licenças ANVISA/CETESB</Link></li>
                 <li><Link href="/conhecimento/cotacao">Cotação com IA</Link></li>
-                <li><Link href="/solucoes/reforma-tributaria">Reforma Tributária</Link></li>
-                <li><a href="/#contato">Contato</a></li>
+                <li><Link href="/#metodo">Método Imbas</Link></li>
+                <li><Link href="/#porque">Por que Imbas</Link></li>
+                <li><Link href="/contato">Contato & Diagnóstico</Link></li>
               </ul>
             </div>
             <div className="foot-col">
               <h4>Fale conosco</h4>
               <ul>
+                <li><Link href="/contato">Formulário de Orçamento</Link></li>
                 <li><a href="mailto:contato@imbastecnologia.com.br">contato@imbastecnologia.com.br</a></li>
               </ul>
             </div>

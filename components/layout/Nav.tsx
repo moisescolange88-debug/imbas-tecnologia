@@ -6,13 +6,36 @@ import { useEffect, useRef, useState } from 'react'
 
 /** Âncoras de seção da home — funcionam a partir de qualquer página. */
 const sectionLinks = [
-  { href: '/#solucoes', label: 'Soluções' },
   { href: '/#automacao', label: 'Como funciona' },
   { href: '/#metodo', label: 'Método' },
   { href: '/#porque', label: 'Por que Imbas' },
 ]
 
-/** Ferramentas agrupadas num único menu, em vez de três CTAs concorrentes. */
+/** Soluções e serviços especializados */
+const solutionLinks = [
+  {
+    href: '/solucoes/dossie-societario',
+    label: 'Dossiê Societário',
+    hint: 'Reconstituição histórica, quadro societário e atos da Junta',
+  },
+  {
+    href: '/solucoes/gestao-documental',
+    label: 'Gestão Documental',
+    hint: 'Cadastro de fornecedores, certidões e homologação SICAF',
+  },
+  {
+    href: '/solucoes/reforma-tributaria',
+    label: 'Reforma Tributária',
+    hint: 'Transição CBS, IBS, IS — LC 214/2025',
+  },
+  {
+    href: '/#solucoes',
+    label: 'Ver todas as soluções',
+    hint: 'IA para contabilidade, advocacia e marketplaces',
+  },
+]
+
+/** Ferramentas agrupadas */
 const toolLinks = [
   {
     href: '/calculos',
@@ -36,23 +59,28 @@ const toolLinks = [
   },
 ]
 
-const CONTATO =
-  'mailto:contato@imbastecnologia.com.br?subject=Diagn%C3%B3stico%20gratuito%20%E2%80%94%20Imbas%20Tecnologia'
+const CONTATO = '/contato'
 
 export default function Nav() {
   const pathname = usePathname()
 
   const [open, setOpen] = useState(false)
+  const [solutionsOpen, setSolutionsOpen] = useState(false)
   const [toolsOpen, setToolsOpen] = useState(false)
+
+  const solutionsRef = useRef<HTMLLIElement>(null)
+  const solutionsBtnRef = useRef<HTMLButtonElement>(null)
+
   const toolsRef = useRef<HTMLLIElement>(null)
   const toolsBtnRef = useRef<HTMLButtonElement>(null)
-  const focusFirstToolRef = useRef(false)
 
+  const isSolution = solutionLinks.some(l => pathname === l.href)
   const isTool = toolLinks.some(l => pathname === l.href)
 
   // Fecha tudo ao navegar.
   useEffect(() => {
     setOpen(false)
+    setSolutionsOpen(false)
     setToolsOpen(false)
   }, [pathname])
 
@@ -74,15 +102,32 @@ export default function Nav() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  // Abertura por teclado (ArrowDown) leva o foco ao primeiro item. Precisa
-  // rodar depois do commit, quando o painel já perdeu o atributo hidden.
+  // Fechamento e acessibilidade do menu Soluções
   useEffect(() => {
-    if (!toolsOpen || !focusFirstToolRef.current) return
-    focusFirstToolRef.current = false
-    toolsRef.current?.querySelector<HTMLAnchorElement>('.nav-tool-link')?.focus()
-  }, [toolsOpen])
+    if (!solutionsOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSolutionsOpen(false)
+        solutionsBtnRef.current?.focus()
+      }
+    }
+    const onPointer = (e: PointerEvent) => {
+      if (!solutionsRef.current?.contains(e.target as Node)) setSolutionsOpen(false)
+    }
+    const onFocusIn = (e: FocusEvent) => {
+      if (!solutionsRef.current?.contains(e.target as Node)) setSolutionsOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('pointerdown', onPointer)
+    document.addEventListener('focusin', onFocusIn)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('pointerdown', onPointer)
+      document.removeEventListener('focusin', onFocusIn)
+    }
+  }, [solutionsOpen])
 
-  // Disclosure "Ferramentas": Escape devolve o foco ao gatilho; clique fora fecha.
+  // Fechamento e acessibilidade do menu Ferramentas
   useEffect(() => {
     if (!toolsOpen) return
     const onKey = (e: KeyboardEvent) => {
@@ -107,7 +152,18 @@ export default function Nav() {
     }
   }, [toolsOpen])
 
-  const mobileLinks = [...sectionLinks, ...toolLinks]
+  const mobileLinks = [
+    { href: '/', label: 'Início' },
+    { href: '/solucoes/dossie-societario', label: 'Dossiê Societário' },
+    { href: '/solucoes/gestao-documental', label: 'Gestão Documental' },
+    { href: '/solucoes/reforma-tributaria', label: 'Reforma Tributária' },
+    { href: '/#solucoes', label: 'Todas as Soluções' },
+    ...sectionLinks,
+    { href: '/calculos', label: 'Calculadora Trabalhista' },
+    { href: '/conhecimento/licenciamento', label: 'Licenças ANVISA & CETESB' },
+    { href: '/conhecimento/cotacao', label: 'Cotação com IA' },
+    { href: '/contato', label: 'Contato & Diagnóstico' },
+  ]
 
   return (
     <>
@@ -135,12 +191,63 @@ export default function Nav() {
           </Link>
 
           <ul className="nav-links nav-links-desktop">
+            {/* Soluções Dropdown */}
+            <li className={`nav-tools ${solutionsOpen ? 'is-open' : ''}`} ref={solutionsRef}>
+              <button
+                ref={solutionsBtnRef}
+                type="button"
+                className={`nav-tools-btn ${isSolution ? 'is-current' : ''}`}
+                aria-expanded={solutionsOpen}
+                aria-controls="nav-solutions-panel"
+                onClick={() => {
+                  setSolutionsOpen(o => !o)
+                  setToolsOpen(false)
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault()
+                    setSolutionsOpen(true)
+                  }
+                }}
+              >
+                Soluções
+                <svg className="nav-tools-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M6 9l6 6 6-6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+
+              <div id="nav-solutions-panel" className="nav-tools-panel" hidden={!solutionsOpen}>
+                <ul>
+                  {solutionLinks.map(l => (
+                    <li key={l.href}>
+                      <Link
+                        className={`nav-tool-link ${pathname === l.href ? 'is-active' : ''}`}
+                        href={l.href}
+                        aria-current={pathname === l.href ? 'page' : undefined}
+                      >
+                        <span className="nav-tool-label">{l.label}</span>
+                        <span className="nav-tool-hint">{l.hint}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+
             {sectionLinks.map(l => (
               <li key={l.href}>
                 <a href={l.href}>{l.label}</a>
               </li>
             ))}
 
+            {/* Ferramentas Dropdown */}
             <li className={`nav-tools ${toolsOpen ? 'is-open' : ''}`} ref={toolsRef}>
               <button
                 ref={toolsBtnRef}
@@ -148,11 +255,13 @@ export default function Nav() {
                 className={`nav-tools-btn ${isTool ? 'is-current' : ''}`}
                 aria-expanded={toolsOpen}
                 aria-controls="nav-tools-panel"
-                onClick={() => setToolsOpen(o => !o)}
+                onClick={() => {
+                  setToolsOpen(o => !o)
+                  setSolutionsOpen(false)
+                }}
                 onKeyDown={e => {
                   if (e.key === 'ArrowDown') {
                     e.preventDefault()
-                    focusFirstToolRef.current = true
                     setToolsOpen(true)
                   }
                 }}
@@ -189,9 +298,9 @@ export default function Nav() {
             </li>
 
             <li>
-              <a className="nav-cta" href={CONTATO}>
+              <Link className="nav-cta" href={CONTATO}>
                 Falar com a Imbas
-              </a>
+              </Link>
             </li>
           </ul>
 
@@ -209,9 +318,6 @@ export default function Nav() {
         </div>
       </nav>
 
-      {/* Fica FORA do <nav> de propósito: o backdrop-filter da barra cria um
-          bloco de contenção, e um position:fixed aqui dentro se ancoraria nos
-          73px do header em vez da viewport. */}
       <div id="nav-mobile" className={`nav-mobile ${open ? 'is-open' : ''}`} aria-hidden={!open}>
         <div className="nav-mobile-backdrop" onClick={() => setOpen(false)}></div>
         <div className="nav-mobile-panel">
@@ -237,9 +343,9 @@ export default function Nav() {
             ))}
           </ul>
           <div className="nav-mobile-cta">
-            <a className="btn btn-gold" href={CONTATO}>
+            <Link className="btn btn-gold" href={CONTATO}>
               Falar com a Imbas
-            </a>
+            </Link>
           </div>
         </div>
       </div>

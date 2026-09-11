@@ -277,7 +277,7 @@ export default function HomePage() {
         <div className="wrap">
           <div className="section-head reveal">
             <p className="eyebrow"><span className="glyph">ᚄ</span> Soluções</p>
-            <h2>Quatro ofícios, uma mesma alquimia: seus dados transformados em vantagem.</h2>
+            <h2>Soluções completas: seus dados e documentos transformados em vantagem.</h2>
             <p>Cada prática tem seus próprios rituais. Desenhamos a IA em torno deles — nunca o contrário.</p>
           </div>
           <div className="cards">
@@ -355,6 +355,53 @@ export default function HomePage() {
                 <li>Precificação dinâmica assistida por IA</li>
                 <li>Atendimento e pós-venda automatizados</li>
               </ul>
+            </article>
+
+            {/* DOSSIÊ SOCIETÁRIO */}
+            <article className="card reveal">
+              <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <rect x="12" y="8" width="28" height="36" rx="4"/>
+                  <path d="M18 16 L34 16 M18 22 L34 22 M18 28 L28 28"/>
+                  <circle cx="34" cy="34" r="5" stroke="#1F9A66"/>
+                  <path d="M34 32 L34 36 M32 34 L36 34"/>
+                </g>
+                <circle cx="34" cy="34" r="2" fill="#B4841C"/>
+              </svg>
+              <h3>Dossiê Societário e Histórico Empresarial</h3>
+              <span className="card-tag">Inteligência Societária & Registral</span>
+              <p>Reconstruímos o histórico formal da empresa por meio de atos societários, registros cadastrais e documentos oficiais. A entrega inclui linha do tempo, documentos organizados e indicação de divergências ou informações ausentes.</p>
+              <ul>
+                <li>Linha do tempo dos acontecimentos societários e alterações</li>
+                <li>Histórico de sócios, administradores e capital social</li>
+                <li>Organização documental para perícias, negociações e inventários</li>
+              </ul>
+              <div style={{ marginTop: 24 }}>
+                <Link className="btn btn-gold" href="/solucoes/dossie-societario">Conheça o serviço</Link>
+              </div>
+            </article>
+
+            {/* GESTÃO DOCUMENTAL */}
+            <article className="card reveal">
+              <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
+                <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <path d="M10 16 L26 8 L42 16 L42 36 L26 44 L10 36 Z"/>
+                  <path d="M26 8 L26 44 M10 16 L26 26 L42 16"/>
+                  <circle cx="26" cy="26" r="4"/>
+                </g>
+                <circle cx="26" cy="26" r="2" fill="#B4841C"/>
+              </svg>
+              <h3>Gestão Documental e Cadastro de Fornecedores</h3>
+              <span className="card-tag">Homologação & Regularidade Fiscal</span>
+              <p>Organizamos documentos, controlamos vencimentos e acompanhamos cadastros de fornecedores. Sua empresa fica preparada para homologações, renovações contratuais e novas oportunidades comerciais.</p>
+              <ul>
+                <li>Checklist personalizado e acompanhamento de portais de clientes</li>
+                <li>Emissão sistemática e controle de validade de certidões</li>
+                <li>Organização e atualização para o SICAF e compras corporativas</li>
+              </ul>
+              <div style={{ marginTop: 24 }}>
+                <Link className="btn btn-gold" href="/solucoes/gestao-documental">Organize seus documentos</Link>
+              </div>
             </article>
           </div>
         </div>
@@ -642,8 +689,11 @@ export default function HomePage() {
         <div className="wrap reveal">
           <p className="eyebrow"><span className="glyph">ᚐ</span> Contato</p>
           <h2>Pronto para acender o <span className="lit">imbas</span> do seu escritório?</h2>
-          <p>Agende um diagnóstico gratuito de 45 minutos. Saímos da conversa com um mapa honesto: o que automatizar primeiro, quanto custa e quanto retorna.</p>
-          <a className="btn btn-gold" href="mailto:contato@imbastecnologia.com.br?subject=Diagn%C3%B3stico%20gratuito%20%E2%80%94%20Imbas%20Tecnologia">Agendar diagnóstico gratuito</a>
+          <p>Agende um diagnóstico gratuito ou solicite orçamento para dossiês societários, gestão documental de fornecedores e inteligência artificial.</p>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <Link className="btn btn-gold" href="/contato">Solicitar orçamento ou diagnóstico</Link>
+            <a className="btn btn-ghost" href="mailto:contato@imbastecnologia.com.br?subject=Diagn%C3%B3stico%20gratuito%20%E2%80%94%20Imbas%20Tecnologia">Enviar e-mail direto</a>
+          </div>
         </div>
       </section>
     </>
