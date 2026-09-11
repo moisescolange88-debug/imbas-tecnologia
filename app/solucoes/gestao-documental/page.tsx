@@ -180,7 +180,7 @@ export default function GestaoDocumentalPage() {
                 Centralizamos certidões federais, estaduais e municipais, balanços e atestados técnicos em repositório digital seguro com monitoramento de validade contínuo, proativo e preventivo.
               </p>
               <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid var(--line-soft)' }}>
-                <span style={{ fontSize: '12px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--emerald-text)', fontWeight: 500 }}>
+                <span style={{ fontSize: '12.5px', letterSpacing: '.04em', color: 'var(--emerald-text)', fontWeight: 600, display: 'block', lineHeight: 1.5, wordBreak: 'break-word' }}>
                   ✦ Portais privados (Ariba, Coupa, Nimbi) e públicos (SICAF)
                 </span>
               </div>
@@ -192,17 +192,17 @@ export default function GestaoDocumentalPage() {
             <div className="serv-stat-item">
               <span className="serv-stat-num">Zero</span>
               <span className="serv-stat-label">Bloqueios de Pagamento</span>
-              <span className="serv-stat-desc">Certidões sempre vigentes eliminam retenção de faturamento e travamento de pedidos de compra.</span>
+              <span className="serv-stat-desc">Certidões vigentes evitam retenção de faturamento e travamento de pedidos.</span>
             </div>
             <div className="serv-stat-item">
-              <span className="serv-stat-num">SICAF & Redes</span>
-              <span className="serv-stat-label">Homologação Ampla</span>
-              <span className="serv-stat-desc">Padronização documental para grandes indústrias, redes varejistas, hospitais e setor público.</span>
+              <span className="serv-stat-num">Amplo</span>
+              <span className="serv-stat-label">SICAF & Redes Privadas</span>
+              <span className="serv-stat-desc">Homologação em portais de grandes compradores e setor público.</span>
             </div>
             <div className="serv-stat-item">
-              <span className="serv-stat-num">30 Dias</span>
+              <span className="serv-stat-num">30d</span>
               <span className="serv-stat-label">Alerta Antecipado</span>
-              <span className="serv-stat-desc">Reemissão programada e conferência minuciosa antes do término da validade de qualquer certidão.</span>
+              <span className="serv-stat-desc">Reemissão programada e controle antes do vencimento das certidões.</span>
             </div>
           </div>
         </div>
@@ -311,7 +311,7 @@ export default function GestaoDocumentalPage() {
             {documentosAcompanhados.map((doc, idx) => (
               <div key={idx} className="serv-doc-pill">
                 <span className="serv-doc-icon"></span>
-                <span style={{ fontSize: '0.94rem', color: 'var(--ink)' }}>{doc}</span>
+                <span className="serv-doc-text">{doc}</span>
               </div>
             ))}
           </div>

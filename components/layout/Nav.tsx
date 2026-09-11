@@ -223,7 +223,7 @@ export default function Nav() {
                 </svg>
               </button>
 
-              <div id="nav-solutions-panel" className="nav-tools-panel" hidden={!solutionsOpen}>
+              <div id="nav-solutions-panel" className="nav-tools-panel nav-tools-panel--left" hidden={!solutionsOpen}>
                 <ul>
                   {solutionLinks.map(l => (
                     <li key={l.href}>

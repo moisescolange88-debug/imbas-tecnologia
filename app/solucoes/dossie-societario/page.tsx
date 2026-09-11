@@ -172,7 +172,7 @@ export default function DossieSocietarioPage() {
                 O dossiê consolida certidões de inteiro teor, alterações contratuais arquivadas nas Juntas Comerciais e dados cadastrais da Receita Federal em uma visão única, cronológica e auditável.
               </p>
               <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid var(--line-soft)' }}>
-                <span style={{ fontSize: '12px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--gold-text)', fontWeight: 500 }}>
+                <span style={{ fontSize: '12.5px', letterSpacing: '.04em', color: 'var(--gold-text)', fontWeight: 600, display: 'block', lineHeight: 1.5, wordBreak: 'break-word' }}>
                   ✦ Atendimento em todo o território nacional
                 </span>
               </div>
@@ -184,17 +184,17 @@ export default function DossieSocietarioPage() {
             <div className="serv-stat-item">
               <span className="serv-stat-num">100%</span>
               <span className="serv-stat-label">Fontes Oficiais</span>
-              <span className="serv-stat-desc">Juntas Comerciais, Receita Federal, Cartórios de RTD e Diários Oficiais com fé pública.</span>
+              <span className="serv-stat-desc">Juntas Comerciais, Receita Federal, Cartórios de RTD e Diários Oficiais.</span>
             </div>
             <div className="serv-stat-item">
-              <span className="serv-stat-num">Cronologia</span>
-              <span className="serv-stat-label">Linha do Tempo Integral</span>
-              <span className="serv-stat-desc">Reconstituição rigorosa de alterações societárias, mudanças de controle e evolução de capital.</span>
+              <span className="serv-stat-num">Integral</span>
+              <span className="serv-stat-label">Linha do Tempo</span>
+              <span className="serv-stat-desc">Reconstituição rigorosa de alterações societárias, sócios e capital social.</span>
             </div>
             <div className="serv-stat-item">
-              <span className="serv-stat-num">Sigilo Total</span>
+              <span className="serv-stat-num">Sigilo</span>
               <span className="serv-stat-label">Conformidade LGPD</span>
-              <span className="serv-stat-desc">Procedimentos estritamente confidenciais sob sigilo profissional e proteção de dados.</span>
+              <span className="serv-stat-desc">Procedimentos estritamente confidenciais sob sigilo e fé pública.</span>
             </div>
           </div>
         </div>
