@@ -1,67 +1,68 @@
 'use client'
 
-import Link from 'next'
+import Link from 'next/link'
 import ContactForm from '@/components/contato/ContactForm'
+import { useOghamNumerals, useOghamStrips } from '@/lib/ogham'
 
 export default function GestaoDocumentalPage() {
+  useOghamNumerals()
+  useOghamStrips()
+
   const indicacoes = [
     'Empresas que pretendem fornecer para indústrias, hospitais, condomínios, redes varejistas ou grandes grupos empresariais',
     'Empresas que precisam preencher portais de homologação e qualificação de fornecedores',
-    'Participantes ativos de processos de cotação, contratação, concorrência e RFPs',
+    'Participantes ativos de processos de cotação, contratação, concorrência comercial e RFPs',
     'Fornecedores com múltiplos clientes e exigências documentais simultâneas e divergentes',
-    'Empresas que enfrentam vencimentos frequentes de certidões e retrabalho na renovação',
-    'Empresas com bloqueios cadastrais periódicos ou atrasos no faturamento e recebimento',
-    'Interessados em organizar e manter regularizada a documentação para contratações públicas',
-    'Empresas que desejam centralizar o controle documental e eliminar pastas dispersas',
+    'Empresas que enfrentam vencimentos frequentes de certidões e retrabalho na renovação periódica',
+    'Empresas com bloqueios cadastrais periódicos ou atrasos no faturamento e recebimento de notas fiscais',
+    'Interessados em organizar e manter permanentemente regularizada a documentação para contratações públicas',
+    'Empresas que desejam centralizar o controle documental e eliminar pastas dispersas e desatualizadas',
   ]
 
   const oQueFazemos = [
     'Levantamento criterioso das exigências de cada cliente, contrato ou portal homologador',
-    'Elaboração de checklist personalizado por cliente ou edital',
+    'Elaboração de checklist personalizado por cliente ou edital de compras',
     'Organização de documentos societários, fiscais e cadastrais vigentes',
     'Conferência analítica dos dados apresentados nos documentos e contratos',
     'Emissão sistemática de certidões disponíveis em portais oficiais federais, estaduais e municipais',
-    'Controle rigoroso de prazos de validade e calendário de vencimentos',
+    'Controle rigoroso de prazos de validade e calendário de vencimentos com alerta prévio',
     'Registro e acompanhamento proativo das pendências fiscais ou cadastrais identificadas',
     'Organização de balanços, demonstrações contábeis e índices econômico-financeiros solicitados',
-    'Preparação do conjunto documental completo e padronizado para submissão',
+    'Preparação do conjunto documental completo e padronizado para submissão ágil',
     'Atualização periódica dos documentos em portais autorizados de clientes',
-    'Acompanhamento contínuo do status de aprovação de cada cadastro',
+    'Acompanhamento contínuo do status de aprovação de cada cadastro corporativo',
     'Organização documental completa para o SICAF (níveis I a VI), quando aplicável',
-    'Relatório executivo de documentos válidos, próximos do vencimento e pendentes',
+    'Relatório executivo periódico de documentos válidos, próximos do vencimento e pendentes',
   ]
 
   const documentosAcompanhados = [
     'Cartão do CNPJ atualizado',
     'Contrato social consolidado e alterações arquivadas',
-    'Certidões simplificadas da Junta Comercial',
-    'Inscrições estadual e municipal',
+    'Certidões simplificadas e específicas da Junta Comercial',
+    'Inscrições estadual e municipal ativas',
     'Alvarás de funcionamento e licenças sanitárias e ambientais',
-    'Certidões de regularidade fiscal federais (Receita e PGFN), estaduais e municipais',
-    'Certificado de regularidade do FGTS (CRF)',
+    'Certidões de regularidade fiscal federais (Receita e PGFN)',
+    'Certidões de regularidade fiscal estaduais',
+    'Certidões de tributos municipais',
+    'Certificado de Regularidade do FGTS (CRF)',
     'Certidão Negativa de Débitos Trabalhistas (CNDT)',
-    'Balanço patrimonial e demonstrações contábeis do último exercício',
-    'Índices de qualificação econômico-financeira (Liquidez Geral, Corrente e Solvência)',
+    'Balanço patrimonial e demonstrações contábeis (DRE)',
+    'Índices de qualificação econômico-financeira (Liquidez e Solvência)',
     'Comprovantes bancários e dados de faturamento homologados',
-    'Declarações específicas exigidas pelo contratante ou compliance',
-    'Certificados técnicos e registros em conselhos profissionais dos responsáveis',
-    'Apólices de seguro vigentes (RC, garantia, vida)',
-    'Documentação trabalhista e previdenciária de equipes alocadas',
-    'Comprovantes de experiência prévia e atestados de capacidade técnica',
+    'Declarações específicas de conformidade e compliance',
+    'Registros e certidões em conselhos de classe profissionais',
+    'Apólices de seguro vigentes e atestados de capacidade técnica',
   ]
 
-  const entregaveis = [
-    'Checklist estruturado por cliente, contrato ou portal de compras',
-    'Pasta digital padronizada e indexada em nuvem',
-    'Relação consolidada dos documentos apresentados e vigentes',
-    'Controle das datas de emissão e prazos exatos de vencimento',
-    'Painel de pendências e ações corretivas recomendadas',
-    'Alertas prévios automáticos antes do vencimento de certidões',
-    'Histórico auditável dos documentos e versões enviadas aos clientes',
-    'Registro centralizado das exigências e comunicações recebidas',
-    'Relatório periódico de acompanhamento do status cadastral',
-    'Comprovantes de protocolo ou envio nos portais de homologação',
-    'Indicação das providências necessárias para regularização de certidões positivas',
+  const beneficios = [
+    'Menor risco de perder prazos documentais e oportunidades comerciais de venda',
+    'Muito mais agilidade no atendimento às demandas cadastrais de novos clientes',
+    'Redução sensível do tempo gasto pela equipe interna na busca e emissão de certidões',
+    'Histórico auditável e documentação centralizada em repositório único e padronizado',
+    'Visão clara e antecipada de certidões que exigem providências antes de vencerem',
+    'Segurança jurídica na submissão de informações e cumprimento dos editais',
+    'Eliminação de pagamentos travados ou notas fiscais retidas por certidões vencidas',
+    'Postura profissional que transmite credibilidade e governança aos grandes compradores',
   ]
 
   const etapas = [
@@ -115,134 +116,179 @@ export default function GestaoDocumentalPage() {
     },
   ]
 
-  const beneficios = [
-    'Menor risco de perder prazos documentais e oportunidades de venda',
-    'Muito mais agilidade no atendimento e respostas aos clientes',
-    'Redução drástica de retrabalho administrativo e estresse na renovação',
-    'Centralização de todas as informações em repositório confiável',
-    'Maior rastreabilidade e histórico dos documentos transmitidos',
-    'Identificação antecipada de certidões travadas antes que travem pagamentos',
-    'Melhor preparação competitiva para contratações de grande porte',
-    'Apoio direto às equipes comercial, financeira e de suprimentos',
-  ]
-
   return (
     <>
-      {/* HERO */}
-      <section style={{ padding: '100px 0 60px', position: 'relative' }}>
+      {/* HERO SECTION */}
+      <section className="serv-hero">
         <div className="wrap">
-          <p className="eyebrow"><span className="glyph">ᚓ</span> Gestão de Fornecedores</p>
-          <h1 style={{ fontSize: 'clamp(2.4rem, 5vw, 4.2rem)', lineHeight: 1.08, margin: '20px 0 24px' }}>
-            Gestão Documental e Cadastro de Fornecedores
-          </h1>
-          <p className="lede" style={{ maxWidth: '44rem', fontSize: '1.2rem', color: 'var(--ink-72)' }}>
-            Mantenha sua empresa preparada para vender, faturar e renovar contratos.
-          </p>
-          <div className="hero-actions" style={{ marginTop: 36 }}>
-            <a className="btn btn-gold" href="#solicitar">Solicitar diagnóstico documental</a>
-            <a className="btn btn-ghost" href="#como-funciona">Ver como funciona</a>
+          <div style={{ marginBottom: 28 }}>
+            <Link
+              href="/#solucoes"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                fontSize: '12px',
+                letterSpacing: '.18em',
+                textTransform: 'uppercase',
+                color: 'var(--ink-56)',
+                textDecoration: 'none',
+                fontWeight: 500,
+                transition: 'color .2s',
+              }}
+            >
+              ← Voltar às Soluções
+            </Link>
           </div>
-        </div>
-      </section>
 
-      {/* TEXTO DE ABERTURA */}
-      <section className="section-pad" style={{ background: 'var(--surface)', borderTop: '1px solid var(--line-soft)', borderBottom: '1px solid var(--line-soft)' }}>
-        <div className="wrap">
-          <div style={{ maxWidth: '46rem', margin: '0 auto' }}>
-            <p className="eyebrow" style={{ marginBottom: 16 }}><span className="glyph">ᚔ</span> Segurança Operacional</p>
-            <h2 style={{ fontSize: 'clamp(2rem, 3.8vw, 3rem)', lineHeight: 1.1, marginBottom: 28 }}>
-              Nunca mais perca um faturamento por certidão vencida ou cadastro desatualizado.
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontSize: '1.08rem', lineHeight: 1.8, color: 'var(--ink-72)' }}>
-              <p>
-                Empresas que fornecem produtos ou serviços para grandes clientes precisam apresentar diferentes documentos durante o cadastro, a contratação, o faturamento e a renovação dos contratos.
+          <div className="serv-hero-grid">
+            <div>
+              <p className="eyebrow">
+                <span className="glyph">᚛</span> Homologação & Regularidade de Fornecedores <span className="glyph">᚜</span>
               </p>
-              <p>
-                Certidões vencidas, formulários incompletos e informações divergentes podem atrasar a homologação, impedir a participação em uma oportunidade comercial ou suspender pagamentos legítimos.
+              <h1>
+                Gestão Documental e <span className="lit">Cadastro de Fornecedores</span>
+              </h1>
+              <p className="lede">
+                Organizamos documentos, controlamos vencimentos e acompanhamos cadastros de fornecedores. Sua empresa fica permanentemente preparada para homologações, renovações contratuais e novas oportunidades comerciais sem atrasos operacionais.
               </p>
-              <p>
-                A <strong>Gestão Documental de Fornecedores</strong> centraliza essas exigências, acompanha os vencimentos e ajuda a empresa a manter seus cadastros organizados nos portais dos clientes e nos sistemas aplicáveis.
+
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 32, alignItems: 'center' }}>
+                <a className="btn btn-gold" href="#solicitar">
+                  Solicitar Diagnóstico Documental
+                </a>
+                <a className="btn btn-ghost" href="#como-funciona">
+                  Conhecer o Método Contínuo
+                </a>
+              </div>
+            </div>
+
+            {/* CARD DE SÍNTESE DO ESCOPO */}
+            <div
+              className="card"
+              style={{
+                padding: '38px 34px',
+                background: 'var(--surface)',
+                borderLeft: '3px solid var(--emerald)',
+              }}
+            >
+              <span className="card-tag">Governança Comercial</span>
+              <h3 style={{ fontSize: '1.45rem', margin: '14px 0 10px', color: 'var(--ink)' }}>
+                Risco Zero de Bloqueio em Portais
+              </h3>
+              <p style={{ fontSize: '0.94rem', color: 'var(--ink-72)', lineHeight: 1.68 }}>
+                Centralizamos certidões federais, estaduais e municipais, balanços e atestados técnicos em repositório digital seguro com monitoramento de validade contínuo, proativo e preventivo.
               </p>
+              <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid var(--line-soft)' }}>
+                <span style={{ fontSize: '12px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--emerald-text)', fontWeight: 500 }}>
+                  ✦ Portais privados (Ariba, Coupa, Nimbi) e públicos (SICAF)
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* BARRA DE MÉTRICAS / DESTAQUES */}
+          <div className="serv-stats-bar">
+            <div className="serv-stat-item">
+              <span className="serv-stat-num">Zero</span>
+              <span className="serv-stat-label">Bloqueios de Pagamento</span>
+              <span className="serv-stat-desc">Certidões sempre vigentes eliminam retenção de faturamento e travamento de pedidos de compra.</span>
+            </div>
+            <div className="serv-stat-item">
+              <span className="serv-stat-num">SICAF & Redes</span>
+              <span className="serv-stat-label">Homologação Ampla</span>
+              <span className="serv-stat-desc">Padronização documental para grandes indústrias, redes varejistas, hospitais e setor público.</span>
+            </div>
+            <div className="serv-stat-item">
+              <span className="serv-stat-num">30 Dias</span>
+              <span className="serv-stat-label">Alerta Antecipado</span>
+              <span className="serv-stat-desc">Reemissão programada e conferência minuciosa antes do término da validade de qualquer certidão.</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* PARA QUEM É INDICADO */}
-      <section className="section-pad">
+      {/* STRIP DECORATIVA OGHAM */}
+      <div className="ogham-strip" aria-hidden="true" style={{ margin: '10px 0 40px' }}>
+        <svg></svg>
+      </div>
+
+      {/* QUANDO É INDICADO */}
+      <section className="section-pad" id="indicacoes">
         <div className="wrap">
-          <div className="section-head reveal" style={{ maxWidth: 'none' }}>
-            <p className="eyebrow"><span className="glyph">ᚁ</span> Perfil de Clientes</p>
-            <h2>Para quem este serviço é indicado?</h2>
-            <p>Empresas que buscam previsibilidade, conformidade e velocidade em suas relações com grandes compradores.</p>
+          <div className="section-head reveal">
+            <p className="eyebrow"><span className="glyph">ᚑ</span> Casos de Aplicação</p>
+            <h2>Quando a gestão documental é indicada?</h2>
+            <p>Cenários operacionais onde o vencimento de uma certidão custa contratos, homologações ou retenção de faturamento.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 18 }}>
+
+          <div className="serv-indicator-grid">
             {indicacoes.map((item, idx) => (
-              <div
-                key={idx}
-                className="card reveal"
-                style={{ padding: '28px 30px', borderRadius: '32px' }}
-              >
-                <span style={{ fontFamily: 'var(--display)', fontSize: '1.8rem', color: 'var(--emerald-text)', display: 'block', marginBottom: 10 }}>
-                  {String(idx + 1).padStart(2, '0')}
-                </span>
-                <p style={{ fontSize: '0.98rem', color: 'var(--ink)', lineHeight: 1.6 }}>{item}</p>
+              <div key={idx} className="serv-indicator-card reveal">
+                <span className="serv-indicator-num">{String(idx + 1).padStart(2, '0')}</span>
+                <p>{item}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* O QUE FAZEMOS & BENEFÍCIOS */}
+      {/* ESCOPO: O QUE FAZEMOS vs BENEFÍCIOS */}
       <section className="section-pad" style={{ background: 'var(--surface)' }}>
         <div className="wrap">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 48, alignItems: 'start' }}>
+          <div className="section-head reveal">
+            <p className="eyebrow"><span className="glyph">ᚔ</span> Matriz de Entrega</p>
+            <h2>Operação proativa e resultados estratégicos</h2>
+            <p>A união entre disciplina operacional contínua e tranquilidade comercial para sua empresa.</p>
+          </div>
+
+          <div className="serv-dual-grid">
             
             {/* O QUE FAZEMOS */}
-            <div className="reveal">
-              <p className="eyebrow"><span className="glyph">ᚄ</span> Atuação Operacional</p>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 3.2vw, 2.6rem)', margin: '18px 0 24px' }}>
-                O que fazemos?
-              </h2>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div className="serv-scope-card reveal">
+              <div className="serv-scope-head">
+                <div className="serv-scope-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 11 12 14 22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="eyebrow" style={{ marginBottom: 4 }}><span className="glyph">ᚄ</span> Operação Contínua</p>
+                  <h3 style={{ fontSize: '1.75rem', margin: 0 }}>O que fazemos por sua empresa</h3>
+                </div>
+              </div>
+
+              <ul className="serv-check-list">
                 {oQueFazemos.map((item, idx) => (
-                  <li
-                    key={idx}
-                    style={{
-                      paddingLeft: 24,
-                      position: 'relative',
-                      fontSize: '0.98rem',
-                      color: 'var(--ink-72)',
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    <span style={{ position: 'absolute', left: 0, top: '0.6em', width: 8, height: 2, background: 'var(--emerald)' }}></span>
-                    {item}
+                  <li key={idx} className="serv-check-item">
+                    <span className="serv-check-dot"></span>
+                    <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* BENEFÍCIOS */}
-            <div className="reveal">
-              <p className="eyebrow"><span className="glyph">ᚂ</span> Resultados Tangíveis</p>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 3.2vw, 2.6rem)', margin: '18px 0 24px' }}>
-                Benefícios para sua empresa
-              </h2>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div className="serv-scope-card is-gold reveal">
+              <div className="serv-scope-head">
+                <div className="serv-scope-icon is-gold">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="8" r="7"/>
+                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="eyebrow" style={{ color: 'var(--gold-text)', marginBottom: 4 }}><span className="glyph">ᚂ</span> Retorno Estratégico</p>
+                  <h3 style={{ fontSize: '1.75rem', margin: 0 }}>Benefícios Diretos</h3>
+                </div>
+              </div>
+
+              <ul className="serv-check-list">
                 {beneficios.map((item, idx) => (
-                  <li
-                    key={idx}
-                    style={{
-                      paddingLeft: 24,
-                      position: 'relative',
-                      fontSize: '0.98rem',
-                      color: 'var(--ink-72)',
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    <span style={{ position: 'absolute', left: 0, top: '0.6em', width: 8, height: 2, background: 'var(--gold)' }}></span>
-                    {item}
+                  <li key={idx} className="serv-check-item">
+                    <span className="serv-check-dot is-gold"></span>
+                    <span style={{ color: 'var(--ink)' }}>{item}</span>
                   </li>
                 ))}
               </ul>
@@ -253,57 +299,19 @@ export default function GestaoDocumentalPage() {
       </section>
 
       {/* DOCUMENTOS ACOMPANHADOS */}
-      <section className="section-pad">
-        <div className="wrap">
-          <div className="section-head reveal" style={{ maxWidth: 'none' }}>
-            <p className="eyebrow"><span className="glyph">ᚋ</span> Escopo de Monitoramento</p>
-            <h2>Documentos que podem ser acompanhados</h2>
-            <p>Gerenciamos o ciclo de vida de todo o acervo cadastral, fiscal, econômico e societário exigido pelo mercado.</p>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-            {documentosAcompanhados.map((doc, idx) => (
-              <div
-                key={idx}
-                className="card reveal"
-                style={{ padding: '22px 24px', borderRadius: '24px' }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--emerald)', flex: 'none' }}></span>
-                  <span style={{ fontSize: '0.95rem', color: 'var(--ink)', fontWeight: 400 }}>{doc}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ marginTop: 32, padding: '18px 24px', background: 'var(--surface)', borderRadius: '20px', borderLeft: '3px solid var(--gold)' }}>
-            <p style={{ fontSize: '0.9rem', color: 'var(--ink-56)', lineHeight: 1.6, margin: 0 }}>
-              <em>Observação:</em> Alguns documentos dependem da atuação de engenheiros, advogados, responsáveis técnicos, seguradoras ou órgãos licenciadores. Nesses casos, a pendência será acompanhada e direcionada ao profissional responsável.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* O QUE VOCÊ RECEBE */}
-      <section className="section-pad" style={{ background: 'var(--surface)' }}>
+      <section className="section-pad" id="documentos">
         <div className="wrap">
           <div className="section-head reveal">
-            <p className="eyebrow"><span className="glyph">ᚑ</span> Entregáveis & Governança</p>
-            <h2>O que você recebe?</h2>
-            <p>Transparência total e ferramentas para sua equipe acompanhar cada homologação em tempo real.</p>
+            <p className="eyebrow"><span className="glyph">ᚓ</span> Matriz Documental</p>
+            <h2>Documentos frequentemente acompanhados</h2>
+            <p>Monitoramos o ciclo de vida completo de 16 categorias essenciais de certidões, habilitações e balanços empresariais.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 18 }}>
-            {entregaveis.map((item, idx) => (
-              <div
-                key={idx}
-                className="card reveal"
-                style={{ background: 'var(--void)', padding: '26px 28px', borderRadius: '28px' }}
-              >
-                <span style={{ fontSize: '12px', letterSpacing: '.18em', textTransform: 'uppercase', color: 'var(--gold-text)', display: 'block', marginBottom: 8 }}>
-                  Entregável {idx + 1}
-                </span>
-                <p style={{ fontSize: '0.96rem', color: 'var(--ink)', lineHeight: 1.6, margin: 0 }}>
-                  {item}
-                </p>
+
+          <div className="serv-docs-grid reveal">
+            {documentosAcompanhados.map((doc, idx) => (
+              <div key={idx} className="serv-doc-pill">
+                <span className="serv-doc-icon"></span>
+                <span style={{ fontSize: '0.94rem', color: 'var(--ink)' }}>{doc}</span>
               </div>
             ))}
           </div>
@@ -311,20 +319,19 @@ export default function GestaoDocumentalPage() {
       </section>
 
       {/* COMO FUNCIONA (5 ETAPAS) */}
-      <section className="section-pad" id="como-funciona">
+      <section className="section-pad" id="como-funciona" style={{ background: 'var(--surface)' }}>
         <div className="wrap">
           <div className="section-head reveal">
-            <p className="eyebrow"><span className="glyph">ᚂ</span> Método Contínuo</p>
+            <p className="eyebrow"><span className="glyph">ᚋ</span> Método Contínuo</p>
             <h2>Como funciona a gestão documental?</h2>
-            <p>Do levantamento inicial ao acompanhamento mensal proativo.</p>
+            <p>Do diagnóstico cadastral inicial ao acompanhamento mensal proativo e preventivo.</p>
           </div>
-          <div className="steps reveal" style={{ borderLeft: '1px solid var(--line-soft)' }}>
+
+          <div className="steps reveal">
             {etapas.map(etapa => (
               <div key={etapa.num} className="step">
-                <div style={{ fontFamily: 'var(--display)', fontSize: '1.8rem', color: 'var(--gold)', marginBottom: 8 }}>
-                  Etapa {etapa.num}
-                </div>
-                <span className="step-name">Fase {etapa.num} de 5</span>
+                <div className="ogham-num" data-strokes={etapa.num} aria-hidden="true"></div>
+                <span className="step-name">Fase 0{etapa.num} de 05</span>
                 <h3>{etapa.titulo}</h3>
                 <p>{etapa.desc}</p>
               </div>
@@ -334,13 +341,14 @@ export default function GestaoDocumentalPage() {
       </section>
 
       {/* MODALIDADES */}
-      <section className="section-pad" id="modalidades" style={{ background: 'var(--surface)' }}>
+      <section className="section-pad" id="modalidades">
         <div className="wrap">
           <div className="section-head reveal">
-            <p className="eyebrow"><span className="glyph">ᚉ</span> Modalidades</p>
-            <h2>Modalidades de contratação</h2>
-            <p>Escolha o formato que melhor atende à dinâmica comercial e operacional da sua empresa.</p>
+            <p className="eyebrow"><span className="glyph">ᚉ</span> Modalidades de Contratação</p>
+            <h2>Formatos de atendimento</h2>
+            <p>Escolha o modelo que melhor atende ao porte da sua carteira de clientes e à complexidade dos seus cadastros.</p>
           </div>
+
           <div className="cards">
             {modalidades.map((m, idx) => (
               <article key={idx} className="card reveal" style={{ background: 'var(--void)' }}>
@@ -348,7 +356,9 @@ export default function GestaoDocumentalPage() {
                 <h3>{m.nome}</h3>
                 <p style={{ marginTop: 16 }}>{m.desc}</p>
                 <div style={{ marginTop: 28 }}>
-                  <a className="btn btn-ghost" href="#solicitar">Solicitar esta modalidade</a>
+                  <a className="btn btn-ghost" href="#solicitar">
+                    Solicitar esta modalidade
+                  </a>
                 </div>
               </article>
             ))}
@@ -357,42 +367,44 @@ export default function GestaoDocumentalPage() {
       </section>
 
       {/* SEGURANÇA E AUTORIZAÇÕES & OBSERVAÇÕES */}
-      <section className="section-pad">
+      <section className="section-pad" style={{ background: 'var(--surface)' }}>
         <div className="wrap">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 32 }}>
             <div
               className="card reveal"
               style={{
-                padding: '36px 40px',
+                padding: '40px 38px',
                 borderLeft: '4px solid var(--emerald)',
+                background: 'var(--void)',
               }}
             >
               <p className="eyebrow" style={{ marginBottom: 14 }}>
-                <span className="glyph">ᚔ</span> Segurança e Autorizações
+                <span className="glyph">ᚔ</span> Segurança e Governança
               </p>
-              <h3 style={{ fontSize: '1.6rem', marginBottom: 16 }}>
+              <h3 style={{ fontSize: '1.65rem', marginBottom: 16 }}>
                 Privacidade rigorosa e acesso auditável
               </h3>
               <p style={{ fontSize: '0.96rem', color: 'var(--ink-72)', lineHeight: 1.8 }}>
-                O acesso a informações fiscais ou ambientes restritos será realizado por meio de autorização apropriada, procuração eletrônica ou acesso conduzido pelo próprio cliente. As autorizações devem ser limitadas aos serviços necessários e podem ser canceladas pelo titular a qualquer momento. <strong>Senhas pessoais não devem ser solicitadas ou compartilhadas.</strong>
+                O acesso a informações fiscais ou ambientes restritos será realizado estritamente por meio de autorização formal, procuração eletrônica da Receita Federal (e-CAC) ou sessões orientadas conduzidas pelo próprio cliente. As autorizações são limitadas aos serviços contratados e podem ser revogadas pelo titular a qualquer instante. <strong>Senhas pessoais de acesso nunca são solicitadas nem compartilhadas.</strong>
               </p>
             </div>
 
             <div
               className="card reveal"
               style={{
-                padding: '36px 40px',
+                padding: '40px 38px',
                 borderLeft: '4px solid var(--gold)',
+                background: 'var(--void)',
               }}
             >
               <p className="eyebrow" style={{ marginBottom: 14 }}>
-                <span className="glyph">ᚐ</span> Observações Importantes
+                <span className="glyph">ᚐ</span> Diretrizes Técnicas
               </p>
-              <h3 style={{ fontSize: '1.6rem', marginBottom: 16 }}>
-                Escopo e responsabilidades
+              <h3 style={{ fontSize: '1.65rem', marginBottom: 16 }}>
+                Escopo e responsabilidades transparentes
               </h3>
               <p style={{ fontSize: '0.96rem', color: 'var(--ink-72)', lineHeight: 1.8 }}>
-                A contratação do serviço não elimina as exigências estabelecidas pelo cliente, pelo edital ou pelo órgão responsável. A emissão de certidões depende da situação cadastral e fiscal da empresa. Quando houver impedimentos, serão apresentadas as pendências identificadas e as providências recomendadas. Taxas públicas, certificados, traduções, cartórios, responsáveis técnicos e serviços de terceiros são cobrados separadamente.
+                A contratação do serviço não substitui as exigências técnicas estabelecidas pelo comprador, pelo edital ou pelo órgão regulador. A emissão de certidões negativas depende da regularidade cadastral e tributária da empresa. Havendo impedimentos ou débitos, serão apresentadas as pendências apontadas e as providências recomendadas. Taxas públicas, registros em conselhos, certificados e serviços de terceiros são apresentados separadamente dos honorários profissionais.
               </p>
             </div>
           </div>
@@ -406,7 +418,7 @@ export default function GestaoDocumentalPage() {
             <p className="eyebrow"><span className="glyph">ᚓ</span> Diagnóstico Documental</p>
             <h2>Sua empresa precisa organizar ou atualizar um cadastro de fornecedor?</h2>
             <p>
-              Envie a relação de documentos, o edital ou a página com as exigências. Faremos uma avaliação inicial e apresentaremos o escopo do serviço.
+              Envie a relação de documentos, o edital de licitação ou o link do portal com as exigências. Faremos uma avaliação preliminar e apresentaremos o escopo do serviço e o cronograma.
             </p>
           </div>
 

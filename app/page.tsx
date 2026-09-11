@@ -368,7 +368,7 @@ export default function HomePage() {
                 </g>
                 <circle cx="34" cy="34" r="2" fill="#B4841C"/>
               </svg>
-              <h3>Dossiê Societário e Histórico Empresarial</h3>
+              <h3>Dossiê Societário e <span className="lit">Histórico Empresarial</span></h3>
               <span className="card-tag">Inteligência Societária & Registral</span>
               <p>Reconstruímos o histórico formal da empresa por meio de atos societários, registros cadastrais e documentos oficiais. A entrega inclui linha do tempo, documentos organizados e indicação de divergências ou informações ausentes.</p>
               <ul>
@@ -391,7 +391,7 @@ export default function HomePage() {
                 </g>
                 <circle cx="26" cy="26" r="2" fill="#B4841C"/>
               </svg>
-              <h3>Gestão Documental e Cadastro de Fornecedores</h3>
+              <h3>Gestão Documental e <span className="lit">Cadastro de Fornecedores</span></h3>
               <span className="card-tag">Homologação & Regularidade Fiscal</span>
               <p>Organizamos documentos, controlamos vencimentos e acompanhamos cadastros de fornecedores. Sua empresa fica preparada para homologações, renovações contratuais e novas oportunidades comerciais.</p>
               <ul>
