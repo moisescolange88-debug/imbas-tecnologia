@@ -35,8 +35,8 @@ const calculos = [
   },
   {
     href: '/calculos/reforma-tributaria',
-    title: 'Reforma Tributária',
-    desc: 'Projeção CBS/IBS 2026-2033, Imposto Seletivo e comparativo com sistema atual',
+    title: 'Imposto Futuro (Reforma Tributária)',
+    desc: 'Projeção CBS/IBS 2026-2033, Split Payment, Imposto Seletivo e comparativo com sistema atual',
   },
 ]
 
@@ -45,9 +45,9 @@ export default function CalculosPage() {
     <CalculatorLayout>
       <div className="wrap">
         <div className="section-head" style={{ maxWidth: 'none', marginBottom: 48 }}>
-          <p className="eyebrow"><span className="glyph">ᚉ</span> Calculadora Trabalhista</p>
-          <h2>Cálculos trabalhistas e reforma tributária.</h2>
-          <p>Ferramentas baseadas na CLT, súmulas do TST e LC 214/2025. Selecione o tipo de cálculo abaixo.</p>
+          <p className="eyebrow"><span className="glyph">ᚉ</span> Ferramentas</p>
+          <h2>Cálculos trabalhistas e imposto futuro.</h2>
+          <p>Ferramentas baseadas na CLT, súmulas do TST, LC 214/2025 e LC 227/2026. Selecione o tipo de cálculo abaixo.</p>
         </div>
 
         <div className="calc-dashboard">
@@ -60,7 +60,7 @@ export default function CalculosPage() {
         </div>
 
         <div className="calc-disclaimer">
-          <strong>Importante:</strong> Os cálculos são baseados nas tabelas oficiais de 2026 (INSS, IRRF, salário mínimo) e nas regras da CLT e súmulas do TST. Os valores são estimativos e podem variar conforme convenções coletivas, decisões judiciais específicas e particularidades do caso concreto. Consulte sempre um profissional especializado para cálculos definitivos.
+          <strong>Importante:</strong> Os cálculos são baseados nas tabelas oficiais de 2026 (INSS, IRRF, salário mínimo) e nas regras da CLT, súmulas do TST e Leis Complementares 214/2025 e 227/2026. Os valores são estimativos e podem variar conforme convenções coletivas e particularidades do caso concreto. Consulte sempre um profissional especializado para cálculos definitivos.
         </div>
       </div>
     </CalculatorLayout>

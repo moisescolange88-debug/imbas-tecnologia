@@ -1,16 +1,16 @@
-// Cálculo do Imposto Seletivo (IS), Split Payment e Cashback
+// Cálculo do Imposto Seletivo (IS), Split Payment e Cashback (LC 214/2025)
 
 import { arredondar } from '@/lib/engine/common'
-import { IMPOSTO_SELETIVO, ALIQUOTA_COMBINADA, CBS_ALIQUOTA_CHEIA, IBS_ALIQUOTA_CHEIA } from './tables'
+import { IMPOSTO_SELETIVO, ALIQUOTA_COMBINADA } from './tables'
 import type { SplitPaymentParams, SplitPaymentResult, CashbackParams, CashbackResult } from './tipos'
 
 /**
- * Calcula o Split Payment — separação automática do tributo no pagamento
- * O valor do tributo é retido na hora, sem passar pela conta da empresa
+ * Calcula o Split Payment — retenção automática do tributo no pagamento (art. 47 LC 214/2025)
+ * O valor do tributo é retido no momento do pagamento e recolhido direto ao Fisco
  */
 export function calcularSplitPayment(params: SplitPaymentParams): SplitPaymentResult {
   const { valorOperacao, aliquotaCombinada = ALIQUOTA_COMBINADA } = params
-  const valorTributo = arredondar(valorOperacao * aliquotaCombinada / 100)
+  const valorTributo = arredondar(valorOperacao * (aliquotaCombinada / 100))
   const valorLiquidoRecebido = arredondar(valorOperacao - valorTributo)
 
   return {
@@ -22,15 +22,13 @@ export function calcularSplitPayment(params: SplitPaymentParams): SplitPaymentRe
 }
 
 /**
- * Calcula o Cashback (devolução de tributos para famílias de baixa renda)
- * Famílias do CadÚnico têm direito a devolução de parte da CBS+IBS sobre o consumo
+ * Calcula o Cashback (devolução de tributos para famílias do CadÚnico - art. 104 LC 214/2025)
  */
 export function calcularCashback(params: CashbackParams): CashbackResult {
-  const { valorConsumo, cadUnico } = params
+  const { valorConsumo, cadUnico, aliquotaCombinada = ALIQUOTA_COMBINADA } = params
 
-  // Percentual de cashback estimado para famílias do CadÚnico
-  const percentualCashback = cadUnico ? 100 : 0 // 100% da CBS+IBS devolvida até um limite
-  const valorCashback = cadUnico ? arredondar(valorConsumo * ALIQUOTA_COMBINADA / 100) : 0
+  const percentualCashback = cadUnico ? 100 : 0
+  const valorCashback = cadUnico ? arredondar(valorConsumo * (aliquotaCombinada / 100)) : 0
 
   return {
     valorConsumo,
@@ -49,6 +47,6 @@ export function getProdutosIS() {
 /**
  * Alíquota combinada CBS + IBS para um dado ano
  */
-export function getAliquotaCombinada(ano: number, cbs: number, ibs: number): number {
+export function getAliquotaCombinada(cbs: number, ibs: number): number {
   return arredondar(cbs + ibs)
 }

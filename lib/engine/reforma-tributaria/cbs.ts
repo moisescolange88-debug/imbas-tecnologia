@@ -2,10 +2,10 @@
 
 import { CBS_ALIQUOTA_CHEIA, TABELA_TRANSICAO, ALIQUOTAS_REDUZIDAS } from './tables'
 import { arredondar } from '@/lib/engine/common'
-import type { CalculoCBSParams, CalculoCBSResult } from './tipos'
+import type { CalculoCBSParams, CalculoCBSResult, CategoriaReduzida } from './tipos'
 
 /**
- * Obtém a alíquota de CBS para um ano específico
+ * Obtém a alíquota nominal de CBS para um ano específico
  */
 export function getAliquotaCBS(ano: number): number {
   const anoData = TABELA_TRANSICAO.find(a => a.ano === ano)
@@ -15,11 +15,11 @@ export function getAliquotaCBS(ano: number): number {
 /**
  * Obtém a alíquota CBS após aplicar redução (se houver)
  */
-export function getAliquotaCBSEfetiva(ano: number, categoria?: string): { aliquotaNominal: number; aliquotaEfetiva: number; descricao: string } {
+export function getAliquotaCBSEfetiva(ano: number, categoria?: CategoriaReduzida | string): { aliquotaNominal: number; aliquotaEfetiva: number; descricao: string } {
   const aliquotaNominal = getAliquotaCBS(ano)
 
   if (!categoria || categoria === 'padrao') {
-    return { aliquotaNominal, aliquotaEfetiva: aliquotaNominal, descricao: 'Sem redução' }
+    return { aliquotaNominal, aliquotaEfetiva: aliquotaNominal, descricao: 'Sem redução (alíquota padrão)' }
   }
 
   const aliquotaReduzida = ALIQUOTAS_REDUZIDAS.find(a => a.categoria === categoria)
@@ -27,7 +27,6 @@ export function getAliquotaCBSEfetiva(ano: number, categoria?: string): { aliquo
     return { aliquotaNominal, aliquotaEfetiva: aliquotaNominal, descricao: 'Sem redução' }
   }
 
-  // Para CBS, a redução % incide sobre a alíquota da CBS proporcionalmente
   const aliquotaEfetiva = arredondar(aliquotaNominal * (1 - aliquotaReduzida.reducao / 100))
   return { aliquotaNominal, aliquotaEfetiva, descricao: `${aliquotaReduzida.reducao}% de redução — ${aliquotaReduzida.nome}` }
 }
@@ -40,7 +39,7 @@ export function calcularCBS(params: CalculoCBSParams): CalculoCBSResult {
   const { aliquotaEfetiva } = getAliquotaCBSEfetiva(ano, aliquotaReduzida)
 
   const baseCalculo = receitaBruta
-  const impostoDevido = arredondar(baseCalculo * aliquotaEfetiva / 100)
+  const impostoDevido = arredondar(baseCalculo * (aliquotaEfetiva / 100))
   const impostoLiquido = Math.max(0, arredondar(impostoDevido - creditos))
 
   return {
