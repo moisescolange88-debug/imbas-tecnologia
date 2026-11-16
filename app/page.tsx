@@ -1,8 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import ReactivePixelField from '@/components/effects/ReactivePixelField'
+import ReactivePixelField, { type ReactivePixelFieldHandle } from '@/components/effects/ReactivePixelField'
 import PixelFormText from '@/components/effects/PixelFormText'
 import PixelMatrixWord from '@/components/effects/PixelMatrixWord'
 import HeroShowcase from '@/components/home/HeroShowcase'
@@ -307,16 +307,24 @@ export default function HomePage() {
   useHeroCanvas()
   useExplainerPlayer()
 
+  const heroFieldRef = useRef<ReactivePixelFieldHandle>(null)
   const [pixelStats, setPixelStats] = useState({ ripples: 0, bursts: 0 })
   const handlePixelStats = useCallback((stats: { ripples: number; bursts: number }) => {
     setPixelStats(stats)
   }, [])
+
+  const triggerHeroBurst = () => {
+    const nx = 0.35 + Math.random() * 0.35
+    const ny = 0.3 + Math.random() * 0.35
+    heroFieldRef.current?.burst(nx, ny)
+  }
 
   return (
     <>
       {/* HERO COM REACTIVE PIXEL FIELD */}
       <header className="pixel-hero" id="topo">
         <ReactivePixelField
+          ref={heroFieldRef}
           className="pixel-hero__field"
           onStatsChange={handlePixelStats}
         />
@@ -360,12 +368,18 @@ export default function HomePage() {
           <div className="pixel-hero__foot">
             <span className="pixel-foot-tag">CAMPO DE POSSIBILIDADES</span>
             <p className="pixel-foot-hint">
-              Clique em qualquer ponto. Segure para carregar. Solte para irradiar ondas.{' '}
-              <span>Ou foque o campo e pressione Enter.</span>
+              Toque ou clique para irradiar ondas. Segure para carregar.{' '}
+              <span>Duplo clique ou toque duplo libera um pulso completo.</span>
             </p>
-            <p className="pixel-foot-stats" aria-live="polite">
-              {pixelStats.ripples} ondas · {pixelStats.bursts} pulsos
-            </p>
+            <div className="pixel-foot-actions">
+              <button type="button" className="pixel-pulse-btn" onClick={triggerHeroBurst}>
+                <span className="pixel-pulse-sq" aria-hidden="true" />
+                Pulsar campo
+              </button>
+              <p className="pixel-foot-stats" aria-live="polite">
+                {pixelStats.ripples} ondas · {pixelStats.bursts} pulsos
+              </p>
+            </div>
           </div>
         </div>
       </header>

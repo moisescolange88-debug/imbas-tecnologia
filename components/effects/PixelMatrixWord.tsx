@@ -140,11 +140,13 @@ export default function PixelMatrixWord({
     const ro = 'ResizeObserver' in window ? new ResizeObserver(() => buildParticles()) : null
     ro?.observe(wrap)
 
+    let isInView = false
     const io =
       'IntersectionObserver' in window
         ? new IntersectionObserver(
             entries => {
-              if (entries[0].isIntersecting) {
+              isInView = entries[0].isIntersecting
+              if (isInView) {
                 assembled = true
                 startTime = performance.now()
               }
@@ -153,6 +155,18 @@ export default function PixelMatrixWord({
           )
         : null
     io?.observe(wrap)
+
+    // Pulso suave periódico quando visível (ótimo para mobile sem hover)
+    let waveIdx = 0
+    const shimmerTimer = !reduced
+      ? window.setInterval(() => {
+          if (!isInView || document.hidden || width < 10) return
+          waveIdx = (waveIdx + 1) % 3
+          const rx = width * (0.18 + waveIdx * 0.28)
+          const ry = height * 0.5
+          scatter(rx, ry, 72, 9)
+        }, 4800)
+      : 0
 
     const onMove = (e: PointerEvent) => {
       const r = wrap.getBoundingClientRect()
@@ -228,6 +242,7 @@ export default function PixelMatrixWord({
 
     return () => {
       cancelAnimationFrame(rafId)
+      window.clearInterval(shimmerTimer)
       ro?.disconnect()
       io?.disconnect()
       wrap.removeEventListener('pointermove', onMove)
