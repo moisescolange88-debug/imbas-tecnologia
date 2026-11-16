@@ -1286,9 +1286,9 @@ export default function HomePage() {
             </Link>
             <a
               className="btn btn-ghost"
-              href="mailto:contato@imbastecnologia.com.br?subject=Diagn%C3%B3stico%20gratuito%20%E2%80%94%20Imbas%20Tecnologia"
+              href="mailto:moises@imbascontabilidade.com.br?subject=Diagn%C3%B3stico%20gratuito%20%E2%80%94%20Imbas%20Tecnologia"
             >
-              Enviar e-mail direto
+              moises@imbascontabilidade.com.br
             </a>
           </div>
         </div>

@@ -59,7 +59,7 @@ export default function ContactForm({
   const [erros, setErros] = useState<Record<string, string>>({})
 
   const WHATSAPP_NUMERO =
-    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '[INSERIR NÚMERO DO WHATSAPP]';
+    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5519974128714';
 
   function formatarCNPJ(v: string) {
     const limpo = v.replace(/\D/g, '').slice(0, 14)
@@ -125,7 +125,7 @@ export default function ContactForm({
       `Mensagem base pronta:\n${msg}`
     )
 
-    const mailtoUrl = `mailto:contato@imbastecnologia.com.br?subject=${encodeURIComponent(`[Diagnóstico] ${servicoAtivo} — ${empresa || nome}`)}&body=${corpoEmail}`
+    const mailtoUrl = `mailto:moises@imbascontabilidade.com.br?subject=${encodeURIComponent(`[Diagnóstico] ${servicoAtivo} — ${empresa || nome}`)}&body=${corpoEmail}`
     window.open(mailtoUrl, '_blank')
     setStatus('enviado')
   }
@@ -133,11 +133,11 @@ export default function ContactForm({
   function handleAbrirWhatsApp() {
     if (!validar()) return
     const msg = gerarMensagem()
-    if (WHATSAPP_NUMERO === '[INSERIR NÚMERO DO WHATSAPP]') {
+    if (!WHATSAPP_NUMERO) {
       alert(
         `Mensagem preparada com sucesso:\n\n"${msg}"\n\nO canal institucional de e-mail será aberto com a demanda preenchida para atendimento direto.`
       )
-      const mailtoUrl = `mailto:contato@imbastecnologia.com.br?subject=${encodeURIComponent(`[WhatsApp Solicitação] ${servicoAtivo}`)}&body=${encodeURIComponent(msg)}`
+      const mailtoUrl = `mailto:moises@imbascontabilidade.com.br?subject=${encodeURIComponent(`[WhatsApp Solicitação] ${servicoAtivo}`)}&body=${encodeURIComponent(msg)}`
       window.open(mailtoUrl, '_blank')
       setStatus('enviado')
       return

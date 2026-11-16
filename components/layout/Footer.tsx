@@ -55,7 +55,16 @@ export default function Footer() {
             <h4>Fale conosco</h4>
             <ul>
               <li><Link href="/contato">Solicitar Diagnóstico</Link></li>
-              <li><a href="mailto:contato@imbastecnologia.com.br">contato@imbastecnologia.com.br</a></li>
+              <li><a href="mailto:moises@imbascontabilidade.com.br">moises@imbascontabilidade.com.br</a></li>
+              <li>
+                <a
+                  href="https://wa.me/5519974128714?text=Ol%C3%A1%21%20Gostaria%20de%20falar%20com%20a%20Imbas%20Tecnologia."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp (19) 97412-8714
+                </a>
+              </li>
             </ul>
           </div>
         </div>

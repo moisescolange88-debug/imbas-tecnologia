@@ -3,6 +3,7 @@ import '@/lib/reactive-pixel-field/src/styles.css'
 import './globals.css'
 import Nav from '@/components/layout/Nav'
 import Footer from '@/components/layout/Footer'
+import WhatsAppBadge from '@/components/layout/WhatsAppBadge'
 import MotionLayer from '@/components/motion/MotionLayer'
 
 const SITE = 'https://imbas-tecnologia.vercel.app'
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
+        <WhatsAppBadge />
         <MotionLayer />
       </body>
     </html>
