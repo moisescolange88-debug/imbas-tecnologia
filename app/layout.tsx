@@ -1,27 +1,9 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, Inter } from 'next/font/google'
+import '@/lib/reactive-pixel-field/src/styles.css'
 import './globals.css'
 import Nav from '@/components/layout/Nav'
 import Footer from '@/components/layout/Footer'
 import MotionLayer from '@/components/motion/MotionLayer'
-
-/* PP Eiko e Basis Grotesque Pro são licenciadas. Os substitutos abaixo são os
-   recomendados pelo sistema: serifada ultraleve (peso 300) para o display e
-   neogrotesca para todo o resto. Trocar por PP Eiko/Basis é só mexer aqui. */
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-cormorant',
-  display: 'swap',
-})
-
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-inter',
-  display: 'swap',
-})
 
 const SITE = 'https://imbas-tecnologia.vercel.app'
 
@@ -49,25 +31,29 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#1F9A66',
+  themeColor: '#10110F',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="pt-BR">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        />
+      </head>
       <body>
-        {/* .reveal parte de opacity:0 e só aparece via IntersectionObserver.
-            Sem JS, o site inteiro ficaria em branco — este reset garante o conteúdo. */}
         <noscript>
-          <style>{'.reveal{opacity:1 !important;transform:none !important}'}</style>
+          <style>{'.reveal,.anim-rise{opacity:1 !important;transform:none !important}'}</style>
         </noscript>
         <Nav />
         <main id="conteudo" style={{ minHeight: '80vh' }}>
           {children}
         </main>
         <Footer />
-        {/* Depois do conteúdo: a camada varre o DOM já montado e vale para
-            todas as rotas — inclusive as que tinham .reveal sem observer. */}
         <MotionLayer />
       </body>
     </html>

@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
+import ReactivePixelField from '@/components/effects/ReactivePixelField'
 import HeroShowcase from '@/components/home/HeroShowcase'
 
 function useOghamNumerals() {
@@ -11,10 +12,10 @@ function useOghamNumerals() {
       const w = 20 + n * 14
       const h = 64
       let s = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`
-      s += `<line x1="6" y1="0" x2="6" y2="${h}" stroke="#15734A" stroke-width="2"/>`
+      s += `<line x1="6" y1="0" x2="6" y2="${h}" stroke="#8CE66B" stroke-width="2"/>`
       for (let i = 0; i < n; i++) {
         const y = h / 2 - (n - 1) * 7 + i * 14
-        s += `<line x1="6" y1="${y}" x2="${6 + n * 11 + 14}" y2="${y}" stroke="#B4841C" stroke-width="2.5"/>`
+        s += `<line x1="6" y1="${y}" x2="${6 + n * 11 + 14}" y2="${y}" stroke="#D9FD78" stroke-width="2.5"/>`
       }
       s += '</svg>'
       el.innerHTML = s
@@ -28,11 +29,8 @@ function useOghamStrips() {
       const W = 1600,
         H = 44,
         mid = H / 2
-      const isDark = svg.closest('.ogham-strip--dark') !== null
-      const axisStroke = isDark ? 'rgba(214,168,68,.26)' : 'rgba(31,154,102,.30)'
-      const markStroke = isDark ? 'rgba(60,196,137,.58)' : 'rgba(31,154,102,.65)'
       svg.setAttribute('viewBox', `0 0 ${W} ${H}`)
-      let out = `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="${axisStroke}" stroke-width="1"/>`
+      let out = `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(187,193,172,.22)" stroke-width="1"/>`
       let x = 30
       let seed = 7 + idx * 13
       const rnd = () => {
@@ -45,7 +43,7 @@ function useOghamStrips() {
         for (let i = 0; i < strokes; i++) {
           const y1 = kind === 0 ? mid - 14 : kind === 1 ? mid : mid - 11
           const y2 = kind === 0 ? mid : kind === 1 ? mid + 14 : mid + 11
-          out += `<line x1="${x + i * 7}" y1="${y1}" x2="${x + i * 7}" y2="${y2}" stroke="${markStroke}" stroke-width="2"/>`
+          out += `<line x1="${x + i * 7}" y1="${y1}" x2="${x + i * 7}" y2="${y2}" stroke="rgba(217,253,120,.48)" stroke-width="2"/>`
         }
         x += strokes * 7 + 26 + rnd() * 30
       }
@@ -79,8 +77,8 @@ function useHeroCanvas() {
     const ro = 'ResizeObserver' in window ? new ResizeObserver(onResize) : null
     ro?.observe(canvas.parentElement!)
 
-    const EMERALD = '31,154,102',
-      GOLD = '180,132,28'
+    const SAGE = '187,193,172',
+      LIME = '217,253,120'
 
     function draw(t: number) {
       const c = size / 2,
@@ -90,22 +88,22 @@ function useHeroCanvas() {
       ctx.save()
       ctx.translate(c, c)
       ctx.rotate(t * 0.00008)
-      ctx.strokeStyle = `rgba(${EMERALD},.42)`
+      ctx.strokeStyle = `rgba(${SAGE},.35)`
       ctx.lineWidth = 1
       ctx.beginPath()
       ctx.arc(0, 0, ringR, 0, Math.PI * 2)
       ctx.stroke()
       ctx.beginPath()
       ctx.arc(0, 0, ringR - 9, 0, Math.PI * 2)
-      ctx.strokeStyle = `rgba(${EMERALD},.18)`
+      ctx.strokeStyle = `rgba(${SAGE},.16)`
       ctx.stroke()
       for (let i = 0; i < 72; i++) {
         const a = (i / 72) * Math.PI * 2
         const long = i % 6 === 0
         const r1 = ringR - (long ? 16 : 8),
           r2 = ringR
-        ctx.strokeStyle = long ? `rgba(${GOLD},.85)` : `rgba(${EMERALD},.36)`
-        ctx.lineWidth = long ? 1.4 : 1
+        ctx.strokeStyle = long ? `rgba(${LIME},.88)` : `rgba(${SAGE},.32)`
+        ctx.lineWidth = long ? 1.5 : 1
         ctx.beginPath()
         ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1)
         ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2)
@@ -118,7 +116,7 @@ function useHeroCanvas() {
           const a = t * 0.0004 + s * ((Math.PI * 2) / 3)
           const x = c + Math.cos(a) * ringR,
             y = c + Math.sin(a) * ringR
-          ctx.fillStyle = `rgba(${GOLD},.95)`
+          ctx.fillStyle = `rgba(${LIME},.95)`
           ctx.beginPath()
           ctx.arc(x, y, 3, 0, Math.PI * 2)
           ctx.fill()
@@ -246,7 +244,6 @@ function useExplainerPlayer() {
       }),
     )
 
-    // Mostra a cena inicial nítida ao fundo antes mesmo de apertar o play
     setScene(0)
 
     if (reduced) {
@@ -308,52 +305,76 @@ export default function HomePage() {
   useHeroCanvas()
   useExplainerPlayer()
 
+  const [pixelStats, setPixelStats] = useState({ ripples: 0, bursts: 0 })
+  const handlePixelStats = useCallback((stats: { ripples: number; bursts: number }) => {
+    setPixelStats(stats)
+  }, [])
+
   return (
     <>
-      {/* HERO */}
-      <header className="hero" id="topo">
-        <div className="hero-aura" aria-hidden="true" />
-        <div className="wrap hero-grid">
-          <div className="hero-copy">
-            <p className="eyebrow">
-              <span className="glyph">ᚔᚋᚁᚐᚄ</span> imbas · irlandês antigo · «conhecimento que ilumina»
+      {/* HERO COM REACTIVE PIXEL FIELD */}
+      <header className="pixel-hero" id="topo">
+        <ReactivePixelField
+          className="pixel-hero__field"
+          onStatsChange={handlePixelStats}
+        />
+
+        <div className="wrap pixel-hero__layer">
+          <div className="pixel-hero__intro">
+            <p className="pixel-kicker">
+              <i aria-hidden="true" />
+              <span>IMBAS · IRLANDÊS ANTIGO · «CONHECIMENTO QUE ILUMINA»</span>
             </p>
+            <p className="pixel-desc">
+              Experiências de IA com pulso.
+              <br />
+              Feitas para mover decisões, não apenas dados.
+            </p>
+          </div>
+
+          <div className="pixel-hero__center">
             <h1>
-              Todo escritório guarda um saber antigo. Nós o tornamos <span className="lit">clarividente</span>.
+              Todo saber antigo.
+              <br />
+              Agora <span className="lit">clarividente.</span>
             </h1>
-            <p className="lede">
-              A Imbas Tecnologia conduz a <strong>transformação digital com inteligência artificial</strong> de
-              escritórios de contabilidade, advocacia, empresas de marketplace e de serviços — automatizando o
-              repetitivo para que sua equipe exerça o que nenhuma máquina tem: julgamento.
-            </p>
-            <div className="hero-actions">
-              <Link className="btn btn-primary" href="/contato">
-                Iniciar a transformação
-              </Link>
-              <a className="btn btn-ghost" href="#metodo">
-                Conhecer o método
-              </a>
-            </div>
-            <div className="hero-trust" aria-label="Destaques da operação">
-              <span>−70% tempo operacional</span>
-              <span aria-hidden="true">·</span>
-              <span>90 dias até produção</span>
-              <span aria-hidden="true">·</span>
-              <span>LGPD &amp; sigilo integral</span>
+            <div className="pixel-hero__bottom-row">
+              <p className="lede">
+                A Imbas Tecnologia conduz a <strong>transformação digital com inteligência artificial</strong> de
+                escritórios de contabilidade, advocacia, marketplaces e serviços — automatizando o repetitivo para sua
+                equipe exercer o que nenhuma máquina tem: julgamento.
+              </p>
+              <div className="hero-actions">
+                <Link className="btn btn-gold" href="/contato">
+                  Iniciar a transformação
+                </Link>
+                <a className="btn btn-ghost" href="#metodo">
+                  Conhecer o método
+                </a>
+              </div>
             </div>
           </div>
 
-          <div className="hero-visual-wrap">
-            <HeroShowcase />
+          <div className="pixel-hero__foot">
+            <span className="pixel-foot-tag">CAMPO DE POSSIBILIDADES</span>
+            <p className="pixel-foot-hint">
+              Clique em qualquer ponto. Segure para carregar. Solte para irradiar ondas.{' '}
+              <span>Ou foque o campo e pressione Enter.</span>
+            </p>
+            <p className="pixel-foot-stats" aria-live="polite">
+              {pixelStats.ripples} ondas · {pixelStats.bursts} pulsos
+            </p>
           </div>
         </div>
       </header>
 
-      {/* ETYMOLOGY — FAIXA ESCURA DE CONTRASTE */}
+      {/* ETYMOLOGY — FAIXA EDITORIAL */}
       <section className="etym-band reveal" aria-label="Etimologia de Imbas">
         <div className="wrap etym-inner">
           <div>
-            <span className="etym-kicker">Significado &amp; Origem</span>
+            <span className="etym-kicker">
+              <i aria-hidden="true" /> Significado &amp; Origem
+            </span>
             <div className="etym-word">
               im<span className="dot">·</span>bas
             </div>
@@ -392,11 +413,11 @@ export default function HomePage() {
             <article className="card reveal">
               <div className="card-top">
                 <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                  <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                     <path d="M8 40 L8 22 M18 40 L18 14 M28 40 L28 26 M38 40 L38 10" />
                     <path d="M4 44 L48 44" />
                   </g>
-                  <circle cx="38" cy="10" r="3" fill="#B4841C" />
+                  <circle cx="38" cy="10" r="3.2" fill="#D9FD78" />
                 </svg>
                 <span className="card-num">01</span>
               </div>
@@ -422,11 +443,11 @@ export default function HomePage() {
             <article className="card reveal">
               <div className="card-top">
                 <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                  <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                     <path d="M26 6 L26 46 M10 14 L42 14" />
                     <path d="M10 14 L4 28 A8 6 0 0 0 16 28 Z M42 14 L36 28 A8 6 0 0 0 48 28 Z" />
                   </g>
-                  <circle cx="26" cy="6" r="3" fill="#B4841C" />
+                  <circle cx="26" cy="6" r="3.2" fill="#D9FD78" />
                 </svg>
                 <span className="card-num">02</span>
               </div>
@@ -452,12 +473,12 @@ export default function HomePage() {
             <article className="card reveal">
               <div className="card-top">
                 <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                  <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                     <circle cx="26" cy="26" r="17" />
                     <path d="M26 9 L26 26 L38 34" />
                     <path d="M9 26 L3 26 M43 26 L49 26 M26 43 L26 49" />
                   </g>
-                  <circle cx="26" cy="26" r="3" fill="#B4841C" />
+                  <circle cx="26" cy="26" r="3.2" fill="#D9FD78" />
                 </svg>
                 <span className="card-num">03</span>
               </div>
@@ -483,13 +504,13 @@ export default function HomePage() {
             <article className="card reveal">
               <div className="card-top">
                 <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                  <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                     <path d="M8 20 L11 8 L41 8 L44 20" />
                     <path d="M8 20 Q11 26 14 20 Q17 26 20 20 Q23 26 26 20 Q29 26 32 20 Q35 26 38 20 Q41 26 44 20" />
                     <path d="M11 24 L11 44 L41 44 L41 24" />
                     <path d="M18 44 L18 32 L26 32 L26 44" />
                   </g>
-                  <circle cx="35" cy="34" r="3" fill="#B4841C" />
+                  <circle cx="35" cy="34" r="3.2" fill="#D9FD78" />
                 </svg>
                 <span className="card-num">04</span>
               </div>
@@ -513,7 +534,7 @@ export default function HomePage() {
             </article>
           </div>
 
-          {/* 3 Práticas Corporativas & Regulatórias alinhadas em 3 colunas */}
+          {/* 3 Práticas Corporativas & Regulatórias */}
           <div className="subblock-head reveal">
             <p className="eyebrow">
               <span className="glyph">ᚓ</span> Práticas especializadas
@@ -525,13 +546,13 @@ export default function HomePage() {
             <article className="card card--accent reveal">
               <div className="card-top">
                 <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                  <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                     <rect x="12" y="8" width="28" height="36" rx="4" />
                     <path d="M18 16 L34 16 M18 22 L34 22 M18 28 L28 28" />
-                    <circle cx="34" cy="34" r="5" stroke="#1F9A66" />
+                    <circle cx="34" cy="34" r="5" />
                     <path d="M34 32 L34 36 M32 34 L36 34" />
                   </g>
-                  <circle cx="34" cy="34" r="2" fill="#B4841C" />
+                  <circle cx="34" cy="34" r="2.2" fill="#D9FD78" />
                 </svg>
                 <span className="pill-badge">Societário</span>
               </div>
@@ -549,7 +570,7 @@ export default function HomePage() {
                 <li>Organização probatória para perícias e M&amp;A</li>
               </ul>
               <div className="card-footer">
-                <Link className="btn btn-primary btn-sm" href="/solucoes/dossie-societario">
+                <Link className="btn btn-gold btn-sm" href="/solucoes/dossie-societario">
                   Conheça o serviço
                 </Link>
               </div>
@@ -558,12 +579,12 @@ export default function HomePage() {
             <article className="card card--accent reveal">
               <div className="card-top">
                 <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                  <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                     <path d="M10 16 L26 8 L42 16 L42 36 L26 44 L10 36 Z" />
                     <path d="M26 8 L26 44 M10 16 L26 26 L42 16" />
                     <circle cx="26" cy="26" r="4" />
                   </g>
-                  <circle cx="26" cy="26" r="2" fill="#B4841C" />
+                  <circle cx="26" cy="26" r="2.2" fill="#D9FD78" />
                 </svg>
                 <span className="pill-badge">Compliance</span>
               </div>
@@ -581,7 +602,7 @@ export default function HomePage() {
                 <li>Atualização completa para SICAF (níveis I a VI)</li>
               </ul>
               <div className="card-footer">
-                <Link className="btn btn-primary btn-sm" href="/solucoes/gestao-documental">
+                <Link className="btn btn-gold btn-sm" href="/solucoes/gestao-documental">
                   Organize seus documentos
                 </Link>
               </div>
@@ -590,11 +611,11 @@ export default function HomePage() {
             <article className="card card--accent reveal">
               <div className="card-top">
                 <svg className="sigil" viewBox="0 0 52 52" aria-hidden="true">
-                  <g fill="none" stroke="#1F9A66" strokeWidth="1.5">
+                  <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                     <path d="M6 40 L46 40 M10 40 L10 22 L26 10 L42 22 L42 40" />
                     <path d="M18 40 L18 28 L34 28 L34 40" />
-                    <circle cx="26" cy="18" r="3" fill="#B4841C" />
                   </g>
+                  <circle cx="26" cy="18" r="3.2" fill="#D9FD78" />
                 </svg>
                 <span className="pill-badge">LC 214/2025</span>
               </div>
@@ -612,7 +633,7 @@ export default function HomePage() {
                 <li>Split payment, cashback e Imposto Seletivo</li>
               </ul>
               <div className="card-footer card-footer--pair">
-                <Link className="btn btn-primary btn-sm" href="/solucoes/reforma-tributaria">
+                <Link className="btn btn-gold btn-sm" href="/solucoes/reforma-tributaria">
                   Saiba mais
                 </Link>
                 <Link className="btn btn-ghost btn-sm" href="/contato?servico=reforma">
@@ -624,7 +645,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* EXPLAINER */}
+      {/* EXPLAINER + MOTOR AO VIVO */}
       <section className="explainer section-pad section-tint" id="automacao">
         <div className="wrap">
           <div className="section-head reveal">
@@ -633,245 +654,261 @@ export default function HomePage() {
             </p>
             <h2>A anatomia de uma automação — e o que ela devolve à sua empresa.</h2>
             <p>
-              Aperte o play: em 26 segundos você entende o caminho que um documento percorre e o tamanho do ganho no
-              processo.
+              Teste os fluxos reais no painel ao vivo ou acompanhe em 26 segundos o caminho que um documento percorre da
+              entrada à decisão.
             </p>
           </div>
-          <div className="player reveal" id="player">
-            <svg className="stage" viewBox="0 0 960 540" aria-label="Diagrama animado: como funciona uma automação com IA">
-              {/* CENA 1 */}
-              <g className="scene" id="sc1">
-                <text className="t-mono" x="480" y="80" textAnchor="middle">
-                  HOJE · O FLUXO MANUAL
-                </text>
-                <g className="a-doc" style={{ animationDelay: '.2s' }}>
-                  <rect x="110" y="170" width="96" height="120" rx="8" className="nodebox" />
-                </g>
-                <g className="a-doc" style={{ animationDelay: '.55s' }}>
-                  <rect x="124" y="182" width="96" height="120" rx="8" className="nodebox" />
-                </g>
-                <g className="a-doc" style={{ animationDelay: '.9s' }}>
-                  <rect x="138" y="194" width="96" height="120" rx="8" className="nodebox" />
-                  <line x1="152" y1="222" x2="220" y2="222" className="sketch" />
-                  <line x1="152" y1="244" x2="220" y2="244" className="sketch" />
-                  <line x1="152" y1="266" x2="204" y2="266" className="sketch" />
-                </g>
-                <text className="t-dim" x="186" y="344" textAnchor="middle">
-                  notas · extratos · peças
-                </text>
-                <path d="M280 244 L380 244" className="wire a-flow" />
-                <g className="a-fade" style={{ animationDelay: '.7s' }}>
-                  <circle cx="470" cy="140" r="30" className="sketch" />
-                  <g className="a-hand" style={{ transformOrigin: '470px 140px' }}>
-                    <line x1="470" y1="140" x2="470" y2="118" stroke="#A6520A" strokeWidth="2.4" />
+
+          <div className="automacao-split reveal">
+            <div className="player" id="player">
+              <svg className="stage" viewBox="0 0 960 540" aria-label="Diagrama animado: como funciona uma automação com IA">
+                {/* CENA 1 */}
+                <g className="scene" id="sc1">
+                  <text className="t-mono" x="480" y="80" textAnchor="middle">
+                    HOJE · O FLUXO MANUAL
+                  </text>
+                  <g className="a-doc" style={{ animationDelay: '.2s' }}>
+                    <rect x="110" y="170" width="96" height="120" rx="8" className="nodebox" />
                   </g>
-                  <circle cx="470" cy="230" r="18" className="sketch" />
-                  <path d="M430 300 Q470 258 510 300" className="sketch" />
-                </g>
-                <g className="a-fade" style={{ animationDelay: '1.2s' }}>
-                  <text className="t-pain" x="600" y="196" fontSize="17">
-                    ✕
+                  <g className="a-doc" style={{ animationDelay: '.55s' }}>
+                    <rect x="124" y="182" width="96" height="120" rx="8" className="nodebox" />
+                  </g>
+                  <g className="a-doc" style={{ animationDelay: '.9s' }}>
+                    <rect x="138" y="194" width="96" height="120" rx="8" className="nodebox" />
+                    <line x1="152" y1="222" x2="220" y2="222" className="sketch" />
+                    <line x1="152" y1="244" x2="220" y2="244" className="sketch" />
+                    <line x1="152" y1="266" x2="204" y2="266" className="sketch" />
+                  </g>
+                  <text className="t-dim" x="186" y="344" textAnchor="middle">
+                    notas · extratos · peças
                   </text>
-                  <text className="t-b" x="626" y="196">
-                    8 minutos por documento
-                  </text>
-                </g>
-                <g className="a-fade" style={{ animationDelay: '1.8s' }}>
-                  <text className="t-pain" x="600" y="240" fontSize="17">
-                    ✕
-                  </text>
-                  <text className="t-b" x="626" y="240">
-                    retrabalho e redigitação
-                  </text>
-                </g>
-                <g className="a-fade" style={{ animationDelay: '2.4s' }}>
-                  <text className="t-pain" x="600" y="284" fontSize="17">
-                    ✕
-                  </text>
-                  <text className="t-b" x="626" y="284">
-                    erros silenciosos
-                  </text>
-                </g>
-                <text className="t-cap a-fade" style={{ animationDelay: '3s' }} x="480" y="468" textAnchor="middle">
-                  Hoje: sua equipe gasta horas digitando o que uma IA lê em segundos.
-                </text>
-              </g>
-              {/* CENA 2 */}
-              <g className="scene" id="sc2">
-                <text className="t-mono" x="480" y="120" textAnchor="middle">
-                  PIPELINE DE AUTOMAÇÃO · RODA 24/7
-                </text>
-                <g className="a-node" style={{ animationDelay: '.2s' }}>
-                  <rect x="40" y="200" width="190" height="88" rx="14" className="nodebox" />
-                  <text className="t-h" x="135" y="238" textAnchor="middle">
-                    Documentos
-                  </text>
-                  <text className="t-dim" x="135" y="262" textAnchor="middle">
-                    notas, extratos, peças
-                  </text>
-                </g>
-                <path d="M230 244 L270 244" className="wire a-flow" />
-                <circle cx="228" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '.4s' }} />
-                <g className="a-node" style={{ animationDelay: '.9s' }}>
-                  <rect x="270" y="200" width="190" height="88" rx="14" className="nodebox" />
-                  <text className="t-h" x="365" y="238" textAnchor="middle">
-                    IA lê e entende
-                  </text>
-                  <text className="t-dim" x="365" y="262" textAnchor="middle">
-                    visão + linguagem natural
+                  <path d="M280 244 L380 244" className="wire a-flow" />
+                  <g className="a-fade" style={{ animationDelay: '.7s' }}>
+                    <circle cx="470" cy="140" r="30" className="sketch" />
+                    <g className="a-hand" style={{ transformOrigin: '470px 140px' }}>
+                      <line x1="470" y1="140" x2="470" y2="118" stroke="#F59E0B" strokeWidth="2.4" />
+                    </g>
+                    <circle cx="470" cy="230" r="18" className="sketch" />
+                    <path d="M430 300 Q470 258 510 300" className="sketch" />
+                  </g>
+                  <g className="a-fade" style={{ animationDelay: '1.2s' }}>
+                    <text className="t-pain" x="600" y="196" fontSize="17">
+                      ✕
+                    </text>
+                    <text className="t-b" x="626" y="196">
+                      8 minutos por documento
+                    </text>
+                  </g>
+                  <g className="a-fade" style={{ animationDelay: '1.8s' }}>
+                    <text className="t-pain" x="600" y="240" fontSize="17">
+                      ✕
+                    </text>
+                    <text className="t-b" x="626" y="240">
+                      retrabalho e redigitação
+                    </text>
+                  </g>
+                  <g className="a-fade" style={{ animationDelay: '2.4s' }}>
+                    <text className="t-pain" x="600" y="284" fontSize="17">
+                      ✕
+                    </text>
+                    <text className="t-b" x="626" y="284">
+                      erros silenciosos
+                    </text>
+                  </g>
+                  <text className="t-cap a-fade" style={{ animationDelay: '3s' }} x="480" y="468" textAnchor="middle">
+                    Hoje: sua equipe gasta horas digitando o que uma IA lê em segundos.
                   </text>
                 </g>
-                <path d="M460 244 L500 244" className="wire a-flow" />
-                <circle cx="458" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '1.1s' }} />
-                <g className="a-node" style={{ animationDelay: '1.6s' }}>
-                  <rect x="500" y="200" width="190" height="88" rx="14" className="nodebox" />
-                  <text className="t-h" x="595" y="238" textAnchor="middle">
-                    Classifica e valida
+                {/* CENA 2 */}
+                <g className="scene" id="sc2">
+                  <text className="t-mono" x="480" y="120" textAnchor="middle">
+                    PIPELINE DE AUTOMAÇÃO · RODA 24/7
                   </text>
-                  <text className="t-dim" x="595" y="262" textAnchor="middle">
-                    com as regras do escritório
-                  </text>
-                </g>
-                <path d="M690 244 L730 244" className="wire a-flow" />
-                <circle cx="688" cy="244" r="4" fill="#B4841C" className="a-dot" style={{ animationDelay: '1.8s' }} />
-                <g className="a-node" style={{ animationDelay: '2.3s' }}>
-                  <rect x="730" y="200" width="190" height="88" rx="14" className="nodebox" />
-                  <text className="t-h" x="825" y="238" textAnchor="middle">
-                    Lança no sistema
-                  </text>
-                  <text className="t-dim" x="825" y="262" textAnchor="middle">
-                    ERP · contábil · jurídico
-                  </text>
-                </g>
-                <text className="t-cap a-fade" style={{ animationDelay: '3s' }} x="480" y="440" textAnchor="middle">
-                  Da caixa de entrada ao sistema — em segundos, sem mãos humanas no caminho.
-                </text>
-              </g>
-              {/* CENA 3 */}
-              <g className="scene" id="sc3">
-                <text className="t-mono" x="480" y="100" textAnchor="middle">
-                  ONDE ENTRA A SUA EQUIPE
-                </text>
-                <g className="a-node" style={{ animationDelay: '.2s' }}>
-                  <rect x="60" y="200" width="190" height="88" rx="14" className="nodebox" />
-                  <text className="t-h" x="155" y="238" textAnchor="middle">
-                    IA processa
-                  </text>
-                  <text className="t-dim" x="155" y="262" textAnchor="middle">
-                    cada documento
-                  </text>
-                </g>
-                <path d="M250 244 C420 244 460 168 600 168" className="wire a-flow" />
-                <path d="M250 244 C420 244 460 320 600 320" className="wire a-flow" />
-                <g className="a-node" style={{ animationDelay: '1s' }}>
-                  <rect x="600" y="130" width="300" height="76" rx="14" className="nodebox" />
-                  <circle cx="638" cy="168" r="15" fill="none" stroke="#B4841C" strokeWidth="1.6" />
-                  <path d="M631 168 l5 6 l10 -12" stroke="#B4841C" strokeWidth="2" fill="none" />
-                  <text className="t-h" x="668" y="164">
-                    ≈ 95% · automático
-                  </text>
-                  <text className="t-dim" x="668" y="186">
-                    conferido, lançado, arquivado
+                  <g className="a-node" style={{ animationDelay: '.2s' }}>
+                    <rect x="40" y="200" width="190" height="88" rx="10" className="nodebox" />
+                    <text className="t-h" x="135" y="238" textAnchor="middle">
+                      Documentos
+                    </text>
+                    <text className="t-dim" x="135" y="262" textAnchor="middle">
+                      notas, extratos, peças
+                    </text>
+                  </g>
+                  <path d="M230 244 L270 244" className="wire a-flow" />
+                  <circle cx="228" cy="244" r="4" fill="#D9FD78" className="a-dot" style={{ animationDelay: '.4s' }} />
+                  <g className="a-node" style={{ animationDelay: '.9s' }}>
+                    <rect x="270" y="200" width="190" height="88" rx="10" className="nodebox" />
+                    <text className="t-h" x="365" y="238" textAnchor="middle">
+                      IA lê e entende
+                    </text>
+                    <text className="t-dim" x="365" y="262" textAnchor="middle">
+                      visão + linguagem natural
+                    </text>
+                  </g>
+                  <path d="M460 244 L500 244" className="wire a-flow" />
+                  <circle cx="458" cy="244" r="4" fill="#D9FD78" className="a-dot" style={{ animationDelay: '1.1s' }} />
+                  <g className="a-node" style={{ animationDelay: '1.6s' }}>
+                    <rect x="500" y="200" width="190" height="88" rx="10" className="nodebox" />
+                    <text className="t-h" x="595" y="238" textAnchor="middle">
+                      Classifica e valida
+                    </text>
+                    <text className="t-dim" x="595" y="262" textAnchor="middle">
+                      com as regras do escritório
+                    </text>
+                  </g>
+                  <path d="M690 244 L730 244" className="wire a-flow" />
+                  <circle cx="688" cy="244" r="4" fill="#D9FD78" className="a-dot" style={{ animationDelay: '1.8s' }} />
+                  <g className="a-node" style={{ animationDelay: '2.3s' }}>
+                    <rect x="730" y="200" width="190" height="88" rx="10" className="nodebox" />
+                    <text className="t-h" x="825" y="238" textAnchor="middle">
+                      Lança no sistema
+                    </text>
+                    <text className="t-dim" x="825" y="262" textAnchor="middle">
+                      ERP · contábil · jurídico
+                    </text>
+                  </g>
+                  <text className="t-cap a-fade" style={{ animationDelay: '3s' }} x="480" y="440" textAnchor="middle">
+                    Da caixa de entrada ao sistema — em segundos, sem mãos humanas no caminho.
                   </text>
                 </g>
-                <g className="a-node" style={{ animationDelay: '1.7s' }}>
-                  <rect x="600" y="282" width="300" height="76" rx="14" className="nodebox" />
-                  <circle cx="638" cy="313" r="9" className="sketch" />
-                  <path d="M624 342 Q638 326 652 342" className="sketch" />
-                  <text className="t-h" x="668" y="316">
-                    ≈ 5% · exceções
+                {/* CENA 3 */}
+                <g className="scene" id="sc3">
+                  <text className="t-mono" x="480" y="100" textAnchor="middle">
+                    ONDE ENTRA A SUA EQUIPE
                   </text>
-                  <text className="t-dim" x="668" y="338">
-                    vão para a sua equipe decidir
-                  </text>
-                </g>
-                <text className="t-cap a-fade" style={{ animationDelay: '2.6s' }} x="480" y="470" textAnchor="middle">
-                  Sua equipe sai da digitação — e entra na decisão.
-                </text>
-              </g>
-              {/* CENA 4 */}
-              <g className="scene" id="sc4">
-                <text className="t-mono" x="480" y="120" textAnchor="middle">
-                  O GANHO NO PROCESSO · MÉDIA APÓS 6 MESES
-                </text>
-                <line x1="330" y1="200" x2="330" y2="330" stroke="rgba(31,154,102,.18)" />
-                <line x1="630" y1="200" x2="630" y2="330" stroke="rgba(31,154,102,.18)" />
-                <g className="a-fade" style={{ animationDelay: '.2s' }}>
-                  <text className="t-big" x="180" y="256" textAnchor="middle" data-from="0" data-to="70" data-pre="−" data-suf="%">
-                    −0%
-                  </text>
-                  <text className="t-b" x="180" y="296" textAnchor="middle">
-                    tempo em tarefas repetitivas
-                  </text>
-                  <text className="t-dim" x="180" y="322" textAnchor="middle">
-                    120 h → 36 h por mês
-                  </text>
-                </g>
-                <g className="a-fade" style={{ animationDelay: '.5s' }}>
-                  <text
-                    className="t-big"
-                    x="480"
-                    y="256"
-                    textAnchor="middle"
-                    data-from="4.20"
-                    data-to="0.60"
-                    data-pre="R$ "
-                    data-dec="2"
-                  >
-                    R$ 4,20
-                  </text>
-                  <text className="t-b" x="480" y="296" textAnchor="middle">
-                    custo por lançamento
-                  </text>
-                  <text className="t-dim" x="480" y="322" textAnchor="middle">
-                    antes: R$ 4,20
+                  <g className="a-node" style={{ animationDelay: '.2s' }}>
+                    <rect x="60" y="200" width="190" height="88" rx="10" className="nodebox" />
+                    <text className="t-h" x="155" y="238" textAnchor="middle">
+                      IA processa
+                    </text>
+                    <text className="t-dim" x="155" y="262" textAnchor="middle">
+                      cada documento
+                    </text>
+                  </g>
+                  <path d="M250 244 C420 244 460 168 600 168" className="wire a-flow" />
+                  <path d="M250 244 C420 244 460 320 600 320" className="wire a-flow" />
+                  <g className="a-node" style={{ animationDelay: '1s' }}>
+                    <rect x="600" y="130" width="300" height="76" rx="10" className="nodebox" />
+                    <circle cx="638" cy="168" r="15" fill="none" stroke="#D9FD78" strokeWidth="1.6" />
+                    <path d="M631 168 l5 6 l10 -12" stroke="#D9FD78" strokeWidth="2" fill="none" />
+                    <text className="t-h" x="668" y="164">
+                      ≈ 95% · automático
+                    </text>
+                    <text className="t-dim" x="668" y="186">
+                      conferido, lançado, arquivado
+                    </text>
+                  </g>
+                  <g className="a-node" style={{ animationDelay: '1.7s' }}>
+                    <rect x="600" y="282" width="300" height="76" rx="10" className="nodebox" />
+                    <circle cx="638" cy="313" r="9" className="sketch" />
+                    <path d="M624 342 Q638 326 652 342" className="sketch" />
+                    <text className="t-h" x="668" y="316">
+                      ≈ 5% · exceções
+                    </text>
+                    <text className="t-dim" x="668" y="338">
+                      vão para a sua equipe decidir
+                    </text>
+                  </g>
+                  <text className="t-cap a-fade" style={{ animationDelay: '2.6s' }} x="480" y="470" textAnchor="middle">
+                    Sua equipe sai da digitação — e entra na decisão.
                   </text>
                 </g>
-                <g className="a-fade" style={{ animationDelay: '.8s' }}>
-                  <text className="t-big" x="780" y="256" textAnchor="middle" data-from="0" data-to="3" data-suf="×">
-                    0×
+                {/* CENA 4 */}
+                <g className="scene" id="sc4">
+                  <text className="t-mono" x="480" y="120" textAnchor="middle">
+                    O GANHO NO PROCESSO · MÉDIA APÓS 6 MESES
                   </text>
-                  <text className="t-b" x="780" y="296" textAnchor="middle">
-                    capacidade de atendimento
-                  </text>
-                  <text className="t-dim" x="780" y="322" textAnchor="middle">
-                    sem contratar mais ninguém
+                  <line x1="330" y1="200" x2="330" y2="330" stroke="rgba(187,193,172,.22)" />
+                  <line x1="630" y1="200" x2="630" y2="330" stroke="rgba(187,193,172,.22)" />
+                  <g className="a-fade" style={{ animationDelay: '.2s' }}>
+                    <text
+                      className="t-big"
+                      x="180"
+                      y="256"
+                      textAnchor="middle"
+                      data-from="0"
+                      data-to="70"
+                      data-pre="−"
+                      data-suf="%"
+                    >
+                      −0%
+                    </text>
+                    <text className="t-b" x="180" y="296" textAnchor="middle">
+                      tempo em tarefas repetitivas
+                    </text>
+                    <text className="t-dim" x="180" y="322" textAnchor="middle">
+                      120 h → 36 h por mês
+                    </text>
+                  </g>
+                  <g className="a-fade" style={{ animationDelay: '.5s' }}>
+                    <text
+                      className="t-big"
+                      x="480"
+                      y="256"
+                      textAnchor="middle"
+                      data-from="4.20"
+                      data-to="0.60"
+                      data-pre="R$ "
+                      data-dec="2"
+                    >
+                      R$ 4,20
+                    </text>
+                    <text className="t-b" x="480" y="296" textAnchor="middle">
+                      custo por lançamento
+                    </text>
+                    <text className="t-dim" x="480" y="322" textAnchor="middle">
+                      antes: R$ 4,20
+                    </text>
+                  </g>
+                  <g className="a-fade" style={{ animationDelay: '.8s' }}>
+                    <text className="t-big" x="780" y="256" textAnchor="middle" data-from="0" data-to="3" data-suf="×">
+                      0×
+                    </text>
+                    <text className="t-b" x="780" y="296" textAnchor="middle">
+                      capacidade de atendimento
+                    </text>
+                    <text className="t-dim" x="780" y="322" textAnchor="middle">
+                      sem contratar mais ninguém
+                    </text>
+                  </g>
+                  <text className="t-cap a-fade" style={{ animationDelay: '1.6s' }} x="480" y="440" textAnchor="middle">
+                    Números médios de referência — no diagnóstico, medimos os seus antes de prometer.
                   </text>
                 </g>
-                <text className="t-cap a-fade" style={{ animationDelay: '1.6s' }} x="480" y="440" textAnchor="middle">
-                  Números médios de referência — no diagnóstico, medimos os seus antes de prometer.
-                </text>
-              </g>
-            </svg>
+              </svg>
 
-            <button className="poster" aria-label="Assistir a explicação animada">
-              <span className="poster-btn">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 4l14 8-14 8z" fill="currentColor" />
-                </svg>
-              </span>
-              <span className="poster-label">assistir · como funciona · 26 s</span>
-            </button>
-
-            <div className="controls">
-              <button className="ctrl-btn" aria-label="Reproduzir ou pausar">
-                ▶
+              <button className="poster" aria-label="Assistir a explicação animada">
+                <span className="poster-btn">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 4l14 8-14 8z" fill="currentColor" />
+                  </svg>
+                </span>
+                <span className="poster-label">assistir · como funciona · 26 s</span>
               </button>
-              <div className="segs">
-                <button className="seg" aria-label="Cena 1: o fluxo manual">
-                  <i></i>
+
+              <div className="controls">
+                <button className="ctrl-btn" aria-label="Reproduzir ou pausar">
+                  ▶
                 </button>
-                <button className="seg" aria-label="Cena 2: entra a IA">
-                  <i></i>
-                </button>
-                <button className="seg" aria-label="Cena 3: humano decide">
-                  <i></i>
-                </button>
-                <button className="seg" aria-label="Cena 4: o ganho">
-                  <i></i>
-                </button>
+                <div className="segs">
+                  <button className="seg" aria-label="Cena 1: o fluxo manual">
+                    <i></i>
+                  </button>
+                  <button className="seg" aria-label="Cena 2: entra a IA">
+                    <i></i>
+                  </button>
+                  <button className="seg" aria-label="Cena 3: humano decide">
+                    <i></i>
+                  </button>
+                  <button className="seg" aria-label="Cena 4: o ganho">
+                    <i></i>
+                  </button>
+                </div>
+                <span className="scene-title">diagrama · 26 s</span>
               </div>
-              <span className="scene-title">diagrama · 26 s</span>
+            </div>
+
+            <div className="automacao-showcase">
+              <HeroShowcase />
             </div>
           </div>
         </div>
@@ -985,7 +1022,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FERRAMENTAS — GRID DE 3 COLUNAS SEM CARD ÓRFÃO */}
+      {/* FERRAMENTAS */}
       <section className="section-pad" id="ferramentas">
         <div className="wrap">
           <div className="section-head reveal" style={{ maxWidth: 'none' }}>
@@ -1012,7 +1049,7 @@ export default function HomePage() {
                 <li>Férias + 1/3 constitucional + abono</li>
               </ul>
               <div className="card-footer">
-                <Link className="btn btn-primary btn-sm" href="/calculos">
+                <Link className="btn btn-gold btn-sm" href="/calculos">
                   Abrir calculadora
                 </Link>
               </div>
@@ -1032,7 +1069,7 @@ export default function HomePage() {
                 <li>Split payment, cashback e Imposto Seletivo</li>
               </ul>
               <div className="card-footer card-footer--pair">
-                <Link className="btn btn-primary btn-sm" href="/calculos/reforma-tributaria">
+                <Link className="btn btn-gold btn-sm" href="/calculos/reforma-tributaria">
                   Simular agora
                 </Link>
                 <Link className="btn btn-ghost btn-sm" href="/solucoes/reforma-tributaria">
@@ -1055,7 +1092,7 @@ export default function HomePage() {
                 <li>Cotação automática pronta com IA</li>
               </ul>
               <div className="card-footer card-footer--pair">
-                <Link className="btn btn-primary btn-sm" href="/conhecimento/licenciamento">
+                <Link className="btn btn-gold btn-sm" href="/conhecimento/licenciamento">
                   Ver base
                 </Link>
                 <Link className="btn btn-ghost btn-sm" href="/conhecimento/cotacao">
@@ -1067,9 +1104,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA FINAL — FAIXA ESCURA DE FECHAMENTO */}
-      <section className="cta-final cta-final--dark" id="contato">
-        <div className="wrap reveal">
+      {/* CTA FINAL COM CAMPO REATIVO */}
+      <section className="cta-final cta-final--pixel" id="contato">
+        <ReactivePixelField className="cta-pixel-field" gridSize={10} fillSize={8} />
+        <div className="wrap cta-final__inner reveal">
           <p className="eyebrow">
             <span className="glyph">ᚐ</span> Contato
           </p>
@@ -1085,7 +1123,7 @@ export default function HomePage() {
               Solicitar orçamento ou diagnóstico
             </Link>
             <a
-              className="btn btn-ghost-light"
+              className="btn btn-ghost"
               href="mailto:contato@imbastecnologia.com.br?subject=Diagn%C3%B3stico%20gratuito%20%E2%80%94%20Imbas%20Tecnologia"
             >
               Enviar e-mail direto

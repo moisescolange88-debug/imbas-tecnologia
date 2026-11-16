@@ -175,12 +175,12 @@ export default function Nav() {
         <div className="nav-inner">
           <Link className="logo" href="/" aria-label="Imbas Tecnologia — início">
             <svg className="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
-              <g fill="none" stroke="#15734A" strokeWidth="1.6">
+              <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                 <circle cx="20" cy="14.5" r="8.5" />
                 <circle cx="14.8" cy="23.5" r="8.5" />
                 <circle cx="25.2" cy="23.5" r="8.5" />
               </g>
-              <circle cx="20" cy="20.5" r="2.2" fill="#8E6614" />
+              <circle cx="20" cy="20.5" r="2.4" fill="#D9FD78" />
             </svg>
             <span className="logo-text">
               <span className="logo-name">

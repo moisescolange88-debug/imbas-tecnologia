@@ -150,8 +150,8 @@ export default function HeroShowcase() {
         <div className="hs-result-head">
           <span className="hs-step-tag hs-step-tag--gold">03 · Decisão humana</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9.5" stroke="#D6A844" strokeWidth="1.4" />
-            <path d="M8.5 12.2l2.4 2.4 4.8-5.1" stroke="#D6A844" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="9.5" stroke="#D9FD78" strokeWidth="1.4" />
+            <path d="M8.5 12.2l2.4 2.4 4.8-5.1" stroke="#D9FD78" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
         <div className="hs-result-metric">{sc.saidaMetrica}</div>

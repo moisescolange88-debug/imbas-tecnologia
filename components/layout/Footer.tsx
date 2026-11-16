@@ -10,12 +10,12 @@ export default function Footer() {
         <div className="foot-brand">
           <Link className="logo" href="/">
             <svg className="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
-              <g fill="none" stroke="#3CC489" strokeWidth="1.6">
+              <g fill="none" stroke="#8CE66B" strokeWidth="1.5">
                 <circle cx="20" cy="14.5" r="8.5" />
                 <circle cx="14.8" cy="23.5" r="8.5" />
                 <circle cx="25.2" cy="23.5" r="8.5" />
               </g>
-              <circle cx="20" cy="20.5" r="2.2" fill="#D6A844" />
+              <circle cx="20" cy="20.5" r="2.4" fill="#D9FD78" />
             </svg>
             <span>
               <span className="logo-name">

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "kind": "delivery-package",
+  "id": "reactive-pixel-field",
+  "templateId": "TPL-0003",
+  "title": "Reactive Pixel Field",
+  "version": "0.1.0-prototype.2",
+  "status": "pre-commerce prototype",
+  "deliveryTarget": "vanilla",
+  "entry": "src/reactive-pixel-field.js",
+  "canonicalEntry": "src/reactive-pixel-field.js",
+  "configuration": "src/configuration.js",
+  "stylesheet": "src/styles.css",
+  "adapter": null,
+  "dependencies": [],
+  "hostDependencies": [],
+  "lifecycle": [
+    "mountReactivePixelField",
+    "update",
+    "pulse",
+    "burst",
+    "getState",
+    "destroy"
+  ],
+  "package": {
+    "archive": "reactive-pixel-field-vanilla-0.1.0-prototype.2.zip",
+    "root": "reactive-pixel-field-vanilla-0.1.0-prototype.2",
+    "install": "INSTALL.md",
+    "include": [
+      "CUSTOMIZATION.md",
+      "INSTALL.md",
+      "README.md",
+      "THIRD_PARTY_NOTICES.md",
+      "WEBSITE-USE.md",
+      "delivery-manifest.json",
+      "src/configuration.js",
+      "src/reactive-pixel-field.js",
+      "src/styles.css"
+    ]
+  }
+}
