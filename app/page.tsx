@@ -147,17 +147,22 @@ function useHeroCanvas() {
   }, [])
 }
 
-function useExplainerPlayer() {
+function useExplainerPlayer(active: boolean) {
   useEffect(() => {
+    if (!active) return
     const player = document.getElementById('player')
     if (!player) return
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const scenes: HTMLElement[] = [].slice.call(player.querySelectorAll('.scene'))
     const segs: HTMLElement[] = [].slice.call(player.querySelectorAll('.seg i'))
     const segBtns: HTMLElement[] = [].slice.call(player.querySelectorAll('.seg'))
-    const titleEl = player.querySelector('.scene-title') as HTMLElement
-    const poster = player.querySelector('.poster') as HTMLElement
-    const btn = player.querySelector('.ctrl-btn') as HTMLElement
+    const rawTitleEl = player.querySelector('.scene-title') as HTMLElement | null
+    const rawPoster = player.querySelector('.poster') as HTMLElement | null
+    const rawBtn = player.querySelector('.ctrl-btn') as HTMLElement | null
+    if (!scenes.length || !rawTitleEl || !rawPoster || !rawBtn) return
+    const titleEl: HTMLElement = rawTitleEl
+    const poster: HTMLElement = rawPoster
+    const btn: HTMLElement = rawBtn
     const durs = [6000, 8000, 6000, 6000]
     const titles = ['1/4 · o fluxo manual', '2/4 · entra a ia', '3/4 · humano decide', '4/4 · o ganho']
     let idx = -1,
@@ -298,14 +303,67 @@ function useExplainerPlayer() {
       cancelAnimationFrame(animId)
       io?.disconnect()
     }
-  }, [])
+  }, [active])
 }
 
 export default function HomePage() {
+  const [playerMode, setPlayerMode] = useState<'video' | 'diagram'>('video')
+  const [videoPlaying, setVideoPlaying] = useState(true)
+  const [videoProgress, setVideoProgress] = useState(0)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const userPausedVideoRef = useRef(false)
+
   useOghamNumerals()
   useOghamStrips()
   useHeroCanvas()
-  useExplainerPlayer()
+  useExplainerPlayer(playerMode === 'diagram')
+
+  useEffect(() => {
+    if (playerMode !== 'video') return
+    const video = videoRef.current
+    if (!video) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      video.pause()
+      setVideoPlaying(false)
+      return
+    }
+    if (!userPausedVideoRef.current) {
+      video.play().then(() => setVideoPlaying(true)).catch(() => {})
+    }
+
+    if (!('IntersectionObserver' in window)) return
+    const io = new IntersectionObserver(
+      entries => {
+        const entry = entries[0]
+        if (!entry) return
+        if (entry.isIntersecting) {
+          if (!userPausedVideoRef.current) {
+            video.play().then(() => setVideoPlaying(true)).catch(() => {})
+          }
+        } else {
+          video.pause()
+          setVideoPlaying(false)
+        }
+      },
+      { threshold: 0.25 },
+    )
+    io.observe(video)
+    return () => io.disconnect()
+  }, [playerMode])
+
+  const toggleVideoPlay = () => {
+    const video = videoRef.current
+    if (!video) return
+    if (video.paused) {
+      userPausedVideoRef.current = false
+      video.play().then(() => setVideoPlaying(true)).catch(() => {})
+    } else {
+      userPausedVideoRef.current = true
+      video.pause()
+      setVideoPlaying(false)
+    }
+  }
 
   const heroFieldRef = useRef<ReactivePixelFieldHandle>(null)
   const [pixelStats, setPixelStats] = useState({ ripples: 0, bursts: 0 })
@@ -678,14 +736,85 @@ export default function HomePage() {
               />
             </h2>
             <p>
-              Teste os fluxos reais no painel ao vivo ou acompanhe em 26 segundos o caminho que um documento percorre da
-              entrada à decisão.
+              Veja a IA lendo documentos e estruturando dados em tempo real, teste os fluxos no painel ao vivo ou explore
+              as quatro etapas da automação.
             </p>
           </div>
 
           <div className="automacao-split reveal">
             <div className="player" id="player">
-              <svg className="stage" viewBox="0 0 960 540" aria-label="Diagrama animado: como funciona uma automação com IA">
+              <div className="player-head">
+                <div className="player-status">
+                  <span className="hs-dot" aria-hidden="true" />
+                  <span>{playerMode === 'video' ? 'Extração documental · IA' : 'Anatomia em 4 cenas'}</span>
+                </div>
+                <div className="player-tabs" role="tablist" aria-label="Modo de visualização">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={playerMode === 'video'}
+                    className={`player-tab ${playerMode === 'video' ? 'is-active' : ''}`}
+                    onClick={() => setPlayerMode('video')}
+                  >
+                    Vídeo ao vivo
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={playerMode === 'diagram'}
+                    className={`player-tab ${playerMode === 'diagram' ? 'is-active' : ''}`}
+                    onClick={() => setPlayerMode('diagram')}
+                  >
+                    Diagrama · 26 s
+                  </button>
+                </div>
+              </div>
+
+              {playerMode === 'video' ? (
+                <>
+                  <div className="player-video-wrap" onClick={toggleVideoPlay}>
+                    <video
+                      ref={videoRef}
+                      className="player-video"
+                      src="/leitura-ia-demo.mp4"
+                      poster="/leitura-ia-poster.jpg"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      onTimeUpdate={e => {
+                        const v = e.currentTarget
+                        if (v.duration > 0) setVideoProgress((v.currentTime / v.duration) * 100)
+                      }}
+                      onPlay={() => setVideoPlaying(true)}
+                      onPause={() => setVideoPlaying(false)}
+                      aria-label="Demonstração da IA escaneando um documento e extraindo campos estruturados em tempo real"
+                    />
+                    <span className="player-video-badge">
+                      <span className="pixel-pulse-sq" aria-hidden="true" />
+                      Leitura e extração em tempo real
+                    </span>
+                  </div>
+                  <div className="controls">
+                    <button
+                      type="button"
+                      className="ctrl-btn"
+                      onClick={toggleVideoPlay}
+                      aria-label={videoPlaying ? 'Pausar vídeo' : 'Reproduzir vídeo'}
+                    >
+                      {videoPlaying ? '❚❚' : '▶'}
+                    </button>
+                    <div className="player-progress-track" aria-hidden="true">
+                      <span className="player-progress-fill" style={{ width: `${videoProgress}%` }} />
+                    </div>
+                    <span className="scene-title">extração ia · 5 s loop</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="player-stage-wrap">
+                    <svg className="stage" viewBox="0 0 960 540" aria-label="Diagrama animado: como funciona uma automação com IA">
                 {/* CENA 1 */}
                 <g className="scene" id="sc1">
                   <text className="t-mono" x="480" y="80" textAnchor="middle">
@@ -908,6 +1037,7 @@ export default function HomePage() {
                 </span>
                 <span className="poster-label">assistir · como funciona · 26 s</span>
               </button>
+                  </div>
 
               <div className="controls">
                 <button className="ctrl-btn" aria-label="Reproduzir ou pausar">
@@ -929,6 +1059,8 @@ export default function HomePage() {
                 </div>
                 <span className="scene-title">diagrama · 26 s</span>
               </div>
+                </>
+              )}
             </div>
 
             <div className="automacao-showcase">
