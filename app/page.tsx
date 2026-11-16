@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import ReactivePixelField from '@/components/effects/ReactivePixelField'
+import PixelFormText from '@/components/effects/PixelFormText'
+import PixelMatrixWord from '@/components/effects/PixelMatrixWord'
 import HeroShowcase from '@/components/home/HeroShowcase'
 
 function useOghamNumerals() {
@@ -334,9 +336,9 @@ export default function HomePage() {
 
           <div className="pixel-hero__center">
             <h1>
-              Todo saber antigo.
+              <PixelFormText text="Todo saber antigo." immediate staggerMs={60} />
               <br />
-              Agora <span className="lit">clarividente.</span>
+              <PixelFormText text="Agora clarividente." highlight="clarividente." immediate staggerMs={65} />
             </h1>
             <div className="pixel-hero__bottom-row">
               <p className="lede">
@@ -375,9 +377,7 @@ export default function HomePage() {
             <span className="etym-kicker">
               <i aria-hidden="true" /> Significado &amp; Origem
             </span>
-            <div className="etym-word">
-              im<span className="dot">·</span>bas
-            </div>
+            <PixelMatrixWord text="im·bas" highlightChar="·" className="etym-matrix" />
             <div className="etym-phon">/ˈim.bas/ · substantivo</div>
             <div className="etym-ogham" aria-hidden="true">
               ᚔᚋᚁᚐᚄ
@@ -404,7 +404,12 @@ export default function HomePage() {
             <p className="eyebrow">
               <span className="glyph">ᚄ</span> Soluções
             </p>
-            <h2>Soluções completas: seus dados e documentos transformados em vantagem.</h2>
+            <h2>
+              <PixelFormText
+                text="Soluções completas: seus dados e documentos transformados em vantagem."
+                highlight="vantagem."
+              />
+            </h2>
             <p>Cada prática tem seus próprios rituais. Desenhamos a IA em torno deles — nunca o contrário.</p>
           </div>
 
@@ -652,7 +657,12 @@ export default function HomePage() {
             <p className="eyebrow">
               <span className="glyph">ᚂ</span> Como funciona
             </p>
-            <h2>A anatomia de uma automação — e o que ela devolve à sua empresa.</h2>
+            <h2>
+              <PixelFormText
+                text="A anatomia de uma automação — e o que ela devolve à sua empresa."
+                highlight="automação"
+              />
+            </h2>
             <p>
               Teste os fluxos reais no painel ao vivo ou acompanhe em 26 segundos o caminho que um documento percorre da
               entrada à decisão.
@@ -921,7 +931,9 @@ export default function HomePage() {
             <p className="eyebrow">
               <span className="glyph">ᚋ</span> Método
             </p>
-            <h2>Quatro passos, gravados como se grava em pedra.</h2>
+            <h2>
+              <PixelFormText text="Quatro passos, gravados como se grava em pedra." highlight="pedra." />
+            </h2>
             <p>
               Sem projetos infinitos. Cada etapa entrega valor antes da próxima começar — e o número de traços no glifo
               ogham marca onde você está.
@@ -983,7 +995,9 @@ export default function HomePage() {
             <p className="eyebrow">
               <span className="glyph">ᚁ</span> Por que Imbas
             </p>
-            <h2>Resultados que se medem — e uma promessa que se cumpre.</h2>
+            <h2>
+              <PixelFormText text="Resultados que se medem — e uma promessa que se cumpre." highlight="cumpre." />
+            </h2>
           </div>
           <div className="proof-grid reveal">
             <div className="proof">
@@ -1029,7 +1043,9 @@ export default function HomePage() {
             <p className="eyebrow">
               <span className="glyph">ᚉ</span> Ferramentas
             </p>
-            <h2>Calculadoras e bases técnicas para o escritório.</h2>
+            <h2>
+              <PixelFormText text="Calculadoras e bases técnicas para o escritório." highlight="escritório." />
+            </h2>
             <p>
               Ferramentas gratuitas baseadas na CLT, súmulas do TST, LC 214/2025 e normas regulatórias da ANVISA e CETESB.
             </p>
@@ -1112,7 +1128,7 @@ export default function HomePage() {
             <span className="glyph">ᚐ</span> Contato
           </p>
           <h2>
-            Pronto para acender o <span className="lit">imbas</span> do seu escritório?
+            <PixelFormText text="Pronto para acender o imbas do seu escritório?" highlight="imbas" />
           </h2>
           <p>
             Agende um diagnóstico gratuito ou solicite orçamento para dossiês societários, gestão documental de
