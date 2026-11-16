@@ -1,8 +1,35 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect } from 'react'
+import ContactForm from '@/components/contato/ContactForm'
+
+function useOghamStrips() {
+  useEffect(() => {
+    document.querySelectorAll('.ogham-strip svg').forEach((svg, idx) => {
+      const W = 1600, H = 44, mid = H / 2
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`)
+      let out = `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(31,154,102,.30)" stroke-width="1"/>`
+      let x = 30
+      let seed = 7 + idx * 13
+      const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 }
+      while (x < W - 30) {
+        const strokes = 1 + Math.floor(rnd() * 5)
+        const kind = Math.floor(rnd() * 3)
+        for (let i = 0; i < strokes; i++) {
+          const y1 = kind === 0 ? mid - 14 : (kind === 1 ? mid : mid - 11)
+          const y2 = kind === 0 ? mid : (kind === 1 ? mid + 14 : mid + 11)
+          out += `<line x1="${x + i * 7}" y1="${y1}" x2="${x + i * 7}" y2="${y2}" stroke="rgba(31,154,102,.65)" stroke-width="2"/>`
+        }
+        x += strokes * 7 + 26 + rnd() * 30
+      }
+      svg.innerHTML = out
+    })
+  }, [])
+}
 
 export default function ReformaTributariaSolucaoPage() {
+  useOghamStrips()
   return (
     <>
       {/* HERO */}
@@ -98,6 +125,13 @@ export default function ReformaTributariaSolucaoPage() {
               <p>Famílias do CadÚnico têm direito à devolução integral da CBS e IBS sobre o consumo. Mecanismo inédito de progressividade no sistema tributário brasileiro.</p>
             </article>
           </div>
+        </div>
+      </section>
+
+      {/* DIAGNÓSTICO */}
+      <section className="section-pad" id="contato">
+        <div className="wrap">
+          <ContactForm servicoInicial="Planejamento — Reforma Tributária" titulo="Diagnóstico de Reforma Tributária" subtitulo="Projete o impacto no seu negócio e receba um plano de ação." />
         </div>
       </section>
 

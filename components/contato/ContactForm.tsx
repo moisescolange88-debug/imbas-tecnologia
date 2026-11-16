@@ -14,6 +14,7 @@ const OPCOES_SERVICO = [
   { id: 'gestao', nome: 'Gestão Documental', rotuloCompleto: 'Gestão Documental e Cadastro de Fornecedores' },
   { id: 'ia-contabil', nome: 'IA Contábil', rotuloCompleto: 'Automação e IA para Escritórios Contábeis' },
   { id: 'juridico', nome: 'Advocacia Aumentada', rotuloCompleto: 'Pesquisa e IA para Escritórios Jurídicos' },
+  { id: 'reforma', nome: 'Reforma Tributária', rotuloCompleto: 'Planejamento — Reforma Tributária' },
   { id: 'outro', nome: 'Outro', rotuloCompleto: 'Outra Demanda Especializada' },
 ]
 
@@ -27,12 +28,23 @@ export default function ContactForm({
 
   // Identifica o serviço ativo inicial
   const servicoEncontrado = OPCOES_SERVICO.find(
-    s => s.rotuloCompleto === servicoInicial || s.nome === servicoInicial
+    s => s.id === servicoInicial || s.rotuloCompleto === servicoInicial || s.nome === servicoInicial
   )
 
   const [servicoAtivo, setServicoAtivo] = useState(
     servicoEncontrado ? servicoEncontrado.rotuloCompleto : OPCOES_SERVICO[0].rotuloCompleto
   )
+
+  // Sincroniza ?servico= da URL (ex.: /contato?servico=ia-contabil)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const param = new URLSearchParams(window.location.search).get('servico')
+    if (!param) return
+    const match = OPCOES_SERVICO.find(
+      s => s.id === param || s.rotuloCompleto === param || s.nome === param
+    )
+    if (match) setServicoAtivo(match.rotuloCompleto)
+  }, [])
 
   const [nome, setNome] = useState('')
   const [empresa, setEmpresa] = useState('')
@@ -50,7 +62,7 @@ export default function ContactForm({
     process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '[INSERIR NÚMERO DO WHATSAPP]';
 
   function formatarCNPJ(v: string) {
-    const limpo = v.replace(/\\D/g, '').slice(0, 14)
+    const limpo = v.replace(/\D/g, '').slice(0, 14)
     if (limpo.length <= 2) return limpo
     if (limpo.length <= 5) return `${limpo.slice(0, 2)}.${limpo.slice(2)}`
     if (limpo.length <= 8) return `${limpo.slice(0, 2)}.${limpo.slice(2, 5)}.${limpo.slice(5)}`
@@ -60,7 +72,7 @@ export default function ContactForm({
   }
 
   function formatarTelefone(v: string) {
-    const limpo = v.replace(/\\D/g, '').slice(0, 11)
+    const limpo = v.replace(/\D/g, '').slice(0, 11)
     if (limpo.length <= 2) return limpo
     if (limpo.length <= 6) return `(${limpo.slice(0, 2)}) ${limpo.slice(2)}`
     if (limpo.length <= 10)
@@ -131,7 +143,7 @@ export default function ContactForm({
       return
     }
 
-    const numeroLimpo = WHATSAPP_NUMERO.replace(/\\D/g, '')
+    const numeroLimpo = WHATSAPP_NUMERO.replace(/\D/g, '')
     const url = `https://wa.me/${numeroLimpo}?text=${encodeURIComponent(msg)}`
     window.open(url, '_blank')
     setStatus('enviado')

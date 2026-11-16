@@ -10,7 +10,7 @@ import MotionLayer from '@/components/motion/MotionLayer'
    neogrotesca para todo o resto. Trocar por PP Eiko/Basis é só mexer aqui. */
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['300', '400'],
+  weight: ['300', '400', '500', '600'],
   style: ['normal', 'italic'],
   variable: '--font-cormorant',
   display: 'swap',
@@ -18,7 +18,7 @@ const cormorant = Cormorant_Garamond({
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
+  weight: ['400', '500', '600'],
   variable: '--font-inter',
   display: 'swap',
 })
