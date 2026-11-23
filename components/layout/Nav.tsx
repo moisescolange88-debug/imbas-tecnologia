@@ -162,6 +162,7 @@ export default function Nav() {
     { href: '/calculos', label: 'Calculadora Trabalhista' },
     { href: '/conhecimento/licenciamento', label: 'Licenças ANVISA & CETESB' },
     { href: '/conhecimento/cotacao', label: 'Cotação com IA' },
+    { href: '/portal', label: 'Área do Cliente' },
     { href: '/contato', label: 'Contato & Diagnóstico' },
   ]
 
@@ -297,6 +298,11 @@ export default function Nav() {
               </div>
             </li>
 
+            <li>
+              <Link href="/portal" className={pathname === '/portal' ? 'is-current' : undefined}>
+                Área do Cliente
+              </Link>
+            </li>
             <li>
               <Link className="nav-cta" href={CONTATO}>
                 Falar com a Imbas
