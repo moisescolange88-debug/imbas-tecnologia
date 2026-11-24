@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import Markdown from './Markdown'
 
-type Ferramenta = { id: string; nome: string; resumo: string; exemplos: string[]; anexos: boolean; extensoes: string[]; quantidade: number; no_ar: boolean }
+type Ferramenta = {
+  id: string; nome: string; resumo: string; exemplos: string[]; anexos: boolean; extensoes: string[]; quantidade: number; no_ar: boolean
+  limite_arquivo: number // maior arquivo que a ferramenta lê
+  arquivo_maximo: number // maior .txt aceito (acima do limite da ferramenta, o servidor compacta antes de entregar)
+  compacta: boolean
+}
 type Estado = {
   usuario: { nome: string; email: string; provisoria: boolean; termo: boolean }
   acesso: { ativo: boolean; creditos: number; validade: string | null; motivo: string }
@@ -16,7 +21,8 @@ type Mensagem = { id: number; papel: 'cliente' | 'ferramenta'; texto: string; es
 type Caso = { id: string; ferramenta: string; titulo: string; mensagens: Mensagem[]; restantes: number }
 type Resumo = { id: string; ferramenta: string; ferramenta_nome: string; titulo: string; atualizada_em: string }
 
-const LIMITE_ENVIO = 4 * 1024 * 1024
+type Andamento = { fase: 'compactando' | 'enviando' | 'enviado'; fracao: number }
+const PARTE_PADRAO = 2 * 1024 * 1024 // cada pedido ao site leva no máximo 4 MB; arquivo maior segue em partes
 const WHATSAPP = 'https://wa.me/5519974128714?text=' + encodeURIComponent('Olá! Quero acesso às ferramentas da Área do Cliente da Imbas Tecnologia.')
 
 class Falha extends Error {
@@ -40,7 +46,48 @@ const enviarJson = (caminho: string, corpo: unknown) =>
   api(caminho, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(corpo) })
 
 const dataBr = (iso: string | null) => (iso ? iso.slice(0, 10).split('-').reverse().join('/') : '')
-const tamanho = (b: number) => (b >= 1048576 ? (b / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB')
+const tamanho = (b: number) => (b >= 1048576 ? (b / 1048576).toFixed(1).replace(/\.0$/, '').replace('.', ',') + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB')
+const extensao = (nome: string) => '.' + (nome.split('.').pop() || '').toLowerCase()
+const espera = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+// Texto (SPED, CSV) encolhe umas dez vezes: é compactado aqui mesmo, antes de subir, quando o navegador sabe fazer isso.
+async function compactar(arq: File): Promise<Blob | null> {
+  if (typeof CompressionStream === 'undefined' || arq.size < 512 * 1024 || !['.txt', '.csv'].includes(extensao(arq.name))) return null
+  try {
+    const fluxo = (arq.stream() as ReadableStream<any>).pipeThrough(new CompressionStream('gzip') as any)
+    const menor = await new Response(fluxo as ReadableStream).blob()
+    return menor.size < arq.size ? menor : null
+  } catch {
+    return null
+  }
+}
+
+// Manda um anexo ao servidor em partes, uma de cada vez, e devolve o código do envio (citado depois na pergunta).
+async function enviarArquivo(ferramenta: string, arq: File, avisar: (a: Andamento) => void): Promise<string> {
+  avisar({ fase: 'compactando', fracao: 0 })
+  const menor = await compactar(arq)
+  const corpo: Blob = menor || arq
+  const aberto = await enviarJson('/api/envio', { ferramenta, nome: arq.name, tamanho: arq.size, bytes: corpo.size, compactado: !!menor }) as { id: string; parte: number }
+  const parte = Math.min(Math.max(Number(aberto.parte) || PARTE_PADRAO, 256 * 1024), 3 * 1024 * 1024)
+  avisar({ fase: 'enviando', fracao: 0 })
+  for (let n = 0, inicio = 0; inicio < corpo.size; n++, inicio += parte) {
+    const fatia = corpo.slice(inicio, inicio + parte)
+    for (let tentativa = 1; ; tentativa++) {
+      try {
+        await api(`/api/envio/${aberto.id}/${n}`, { method: 'POST', headers: { 'content-type': 'application/octet-stream' }, body: fatia })
+        break
+      } catch (f) {
+        const status = (f as Falha).status
+        // queda de conexão ou servidor sem responder: tenta a mesma parte de novo (o servidor não grava duas vezes)
+        if (![0, 502, 504].includes(status) || tentativa >= 4) throw f
+        await espera(1500 * tentativa)
+      }
+    }
+    avisar({ fase: 'enviando', fracao: Math.min(1, (inicio + fatia.size) / corpo.size) })
+  }
+  avisar({ fase: 'enviado', fracao: 1 })
+  return aberto.id
+}
 const maiusculaInicial = (t: string) => (t ? t[0].toUpperCase() + t.slice(1) : t)
 
 export default function Portal() {
@@ -277,12 +324,12 @@ function Painel({ estado, recarregar, aoSair }: { estado: Estado; recarregar: ()
 
   useEffect(() => { fimRef.current?.scrollIntoView({ block: 'end' }) }, [caso?.mensagens.length, estadoUltima])
 
-  const enviar = async (ferramenta: string | null, mensagem: string, arquivos: File[]) => {
+  const enviar = async (ferramenta: string | null, mensagem: string, envios: string[]) => {
     const corpo = new FormData()
     corpo.set('mensagem', mensagem)
     if (aberto) corpo.set('conversa', aberto)
     else if (ferramenta) corpo.set('ferramenta', ferramenta)
-    for (const a of arquivos) corpo.append('anexos', a)
+    for (const id of envios) corpo.append('envios', id) // os anexos já subiram em partes; aqui vai só o código de cada um
     const r = await api<{ conversa: string }>('/api/pergunta', { method: 'POST', body: corpo })
     if (aberto === r.conversa) await abrir(r.conversa)
     else setAberto(r.conversa)
@@ -366,7 +413,7 @@ function Painel({ estado, recarregar, aoSair }: { estado: Estado; recarregar: ()
                   rotulo="Enviar"
                   dica={`Este caso ainda aceita ${caso.restantes} ${caso.restantes === 1 ? 'mensagem' : 'mensagens'}. Continuar um caso não consome crédito.`}
                   maximo={estado.limites.mensagem_maxima}
-                  aoEnviar={(texto, arquivos) => enviar(null, texto, arquivos)}
+                  aoEnviar={(texto, envios) => enviar(null, texto, envios)}
                 />
               ) : (
                 <p className="pt-nota">{acesso.ativo ? 'Este caso chegou ao limite de mensagens. Abra um caso novo para continuar.' : acesso.motivo}</p>
@@ -416,7 +463,7 @@ function Balao({ m }: { m: Mensagem }) {
   )
 }
 
-function NovoCaso({ estado, aoEnviar }: { estado: Estado; aoEnviar: (ferramenta: string, texto: string, arquivos: File[]) => Promise<void> }) {
+function NovoCaso({ estado, aoEnviar }: { estado: Estado; aoEnviar: (ferramenta: string, texto: string, envios: string[]) => Promise<void> }) {
   const [escolhida, setEscolhida] = useState(estado.ferramentas[0]?.id || '')
   const [exemplo, setExemplo] = useState('')
   const f = estado.ferramentas.find((x) => x.id === escolhida) || null
@@ -450,7 +497,7 @@ function NovoCaso({ estado, aoEnviar }: { estado: Estado; aoEnviar: (ferramenta:
           rotulo="Abrir caso (1 crédito)"
           dica="Abrir um caso consome 1 crédito e inclui as perguntas de continuação. Se a primeira resposta falhar, o crédito volta."
           maximo={estado.limites.mensagem_maxima}
-          aoEnviar={(texto, arquivos) => aoEnviar(escolhida, texto, arquivos)}
+          aoEnviar={(texto, envios) => aoEnviar(escolhida, texto, envios)}
         />
       ) : (
         <div className="pt-faixa">
@@ -464,47 +511,81 @@ function NovoCaso({ estado, aoEnviar }: { estado: Estado; aoEnviar: (ferramenta:
 
 function Compositor({ ferramenta, ocupado, rotulo, dica, maximo, inicial = '', aoEnviar }: {
   ferramenta: Ferramenta | null; ocupado: boolean; rotulo: string; dica: string; maximo: number; inicial?: string
-  aoEnviar: (texto: string, arquivos: File[]) => Promise<void>
+  aoEnviar: (texto: string, envios: string[]) => Promise<void>
 }) {
   const [texto, setTexto] = useState(inicial)
   const [arquivos, setArquivos] = useState<File[]>([])
+  const [andamento, setAndamento] = useState<Map<File, Andamento>>(new Map())
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
   const campo = useRef<HTMLInputElement>(null)
+  const subidos = useRef(new Map<File, string>()) // anexos que já estão no servidor: não sobem de novo se o envio da mensagem falhar
   const aceita = ferramenta?.anexos ? ferramenta.extensoes : []
 
   const escolher = (lista: FileList | null) => {
     if (!lista || !ferramenta) return
     const novos = [...arquivos]
+    let recusa = ''
     for (const a of Array.from(lista)) {
-      const ext = '.' + (a.name.split('.').pop() || '').toLowerCase()
-      if (!aceita.includes(ext)) { setErro(`Tipo de arquivo não aceito: ${a.name}. Aceitos: ${aceita.join(', ')}.`); continue }
-      if (!novos.some((n) => n.name === a.name && n.size === a.size)) novos.push(a)
+      const ext = extensao(a.name)
+      if (!aceita.includes(ext)) recusa = `Tipo de arquivo não aceito: ${a.name}. Aceitos: ${aceita.join(', ')}.`
+      else if (a.size === 0) recusa = `O arquivo ${a.name} está vazio.`
+      else if (a.size > (ext === '.txt' ? ferramenta.arquivo_maximo : ferramenta.limite_arquivo)) {
+        recusa = `${a.name} tem ${tamanho(a.size)}; arquivos ${ext} vão até ${tamanho(ext === '.txt' ? ferramenta.arquivo_maximo : ferramenta.limite_arquivo)} nesta ferramenta.`
+      } else if (!novos.some((n) => n.name === a.name && n.size === a.size)) novos.push(a)
     }
-    if (novos.length > ferramenta.quantidade) return setErro(`São aceitos até ${ferramenta.quantidade} anexos por mensagem.`)
-    if (novos.reduce((s, a) => s + a.size, 0) > LIMITE_ENVIO - 65536) {
-      return setErro('Os anexos passam de 4 MB. Compacte em .zip, quando a ferramenta aceitar, ou envie em mensagens separadas.')
-    }
-    setErro('')
-    setArquivos(novos)
     if (campo.current) campo.current.value = ''
+    if (novos.length > ferramenta.quantidade) return setErro(`São aceitos até ${ferramenta.quantidade} anexos por mensagem.`)
+    setErro(recusa)
+    setArquivos(novos)
+  }
+
+  const remover = (a: File) => {
+    const id = subidos.current.get(a)
+    if (id) api(`/api/envio/${id}`, { method: 'DELETE' }).catch(() => { /* o servidor apaga sozinho depois de um tempo */ })
+    subidos.current.delete(a)
+    setAndamento((m) => { const n = new Map(m); n.delete(a); return n })
+    setArquivos((lista) => lista.filter((x) => x !== a))
   }
 
   const enviar = async (e: FormEvent) => {
     e.preventDefault()
-    if (!texto.trim() && arquivos.length === 0) return
+    if (!ferramenta || (!texto.trim() && arquivos.length === 0)) return
     setErro('')
     setEnviando(true)
     try {
-      await aoEnviar(texto.trim(), arquivos)
+      const envios: string[] = []
+      for (const a of arquivos) {
+        let id = subidos.current.get(a)
+        if (!id) {
+          id = await enviarArquivo(ferramenta.id, a, (x) => setAndamento((m) => new Map(m).set(a, x)))
+          subidos.current.set(a, id)
+        }
+        envios.push(id)
+      }
+      await aoEnviar(texto.trim(), envios)
+      subidos.current.clear()
+      setAndamento(new Map())
       setTexto('')
       setArquivos([])
     } catch (f) {
-      setErro(maiusculaInicial((f as Falha).message))
+      const falha = f as Falha
+      if (falha.status === 410) { subidos.current.clear(); setAndamento(new Map()) } // o servidor não tem mais os anexos: sobem de novo
+      else setAndamento((m) => new Map(Array.from(m).filter(([a]) => subidos.current.has(a))))
+      setErro(maiusculaInicial(falha.message || 'Não foi possível enviar. Tente de novo.'))
     } finally {
       setEnviando(false)
     }
   }
+
+  const situacao = (a: File) => {
+    const x = andamento.get(a)
+    if (!x) return ''
+    if (x.fase === 'compactando') return ' · preparando…'
+    if (x.fase === 'enviando') return ` · enviando ${Math.round(x.fracao * 100)}%`
+    return ' · enviado'
+  }
+  const subindo = enviando && arquivos.some((a) => andamento.get(a)?.fase !== 'enviado')
 
   const parado = ocupado || enviando || !ferramenta || !ferramenta.no_ar
   return (
@@ -518,13 +599,17 @@ function Compositor({ ferramenta, ocupado, rotulo, dica, maximo, inicial = '', a
       {arquivos.length > 0 && (
         <ul className="pt-anexos">
           {arquivos.map((a, i) => (
-            <li key={i}>{a.name} · {tamanho(a.size)} <button type="button" className="pt-link" onClick={() => setArquivos(arquivos.filter((_, n) => n !== i))} aria-label={`Remover ${a.name}`}>remover</button></li>
+            <li key={i}>
+              {a.name} · {tamanho(a.size)}<span aria-live="polite">{situacao(a)}</span>{' '}
+              <button type="button" className="pt-link" disabled={enviando} onClick={() => remover(a)} aria-label={`Remover ${a.name}`}>remover</button>
+              {andamento.get(a)?.fase === 'enviando' && <progress className="pt-barra" max={1} value={andamento.get(a)?.fracao || 0} />}
+            </li>
           ))}
         </ul>
       )}
       {erro && <p className="pt-erro" role="alert">{erro}</p>}
       <div className="pt-acoes">
-        <button className="btn btn-gold" type="submit" disabled={parado || (!texto.trim() && arquivos.length === 0)}>{enviando ? 'Enviando…' : ocupado ? 'Aguarde a resposta' : rotulo}</button>
+        <button className="btn btn-gold" type="submit" disabled={parado || (!texto.trim() && arquivos.length === 0)}>{subindo ? 'Enviando anexos…' : enviando ? 'Enviando…' : ocupado ? 'Aguarde a resposta' : rotulo}</button>
         {aceita.length > 0 && (
           <>
             <input ref={campo} id="pt-anexo" className="pt-oculto" type="file" multiple accept={aceita.join(',')} disabled={parado} onChange={(e) => escolher(e.target.files)} />
@@ -534,7 +619,11 @@ function Compositor({ ferramenta, ocupado, rotulo, dica, maximo, inicial = '', a
       </div>
       <p className="pt-nota">
         {dica}
-        {aceita.length > 0 && <> Anexos aceitos: {aceita.join(', ')}; até 4 MB por mensagem.</>}
+        {ferramenta && aceita.length > 0 && (
+          <> Anexos aceitos: {aceita.join(', ')}, até {tamanho(ferramenta.limite_arquivo)} por arquivo
+            {ferramenta.compacta && <>; SPED em .txt pode ter até {tamanho(ferramenta.arquivo_maximo)}, porque é compactado no envio</>}.
+          </>
+        )}
       </p>
     </form>
   )

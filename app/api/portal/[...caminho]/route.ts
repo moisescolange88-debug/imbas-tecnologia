@@ -12,9 +12,13 @@ const PERMITIDOS = [
   /^\/api\/(estado|extrato|conversas|pergunta|trocar-senha|termo)$/,
   /^\/api\/conversa\/[a-f0-9]{32}$/,
   /^\/api\/arquivo\/[A-Za-z0-9_-]{10,40}$/,
+  // anexo grande: a tela abre o envio, manda o arquivo em partes e o servidor monta
+  /^\/api\/envio$/,
+  /^\/api\/envio\/[A-Za-z0-9_-]{16,40}$/,
+  /^\/api\/envio\/[A-Za-z0-9_-]{16,40}\/\d{1,4}$/,
 ]
-const LIMITE = 4 * 1024 * 1024 // tamanho máximo de um envio que passa por esta função
-const GRANDE = 'Envio grande demais: o limite é de 4 MB por mensagem, somando os anexos. Compacte os arquivos em .zip ou envie em mensagens separadas.'
+const LIMITE = 4 * 1024 * 1024 // tamanho máximo de um pedido que passa por esta função (a Vercel corta em 4,5 MB)
+const GRANDE = 'Pedido grande demais para passar pelo site. Recarregue a página e anexe o arquivo de novo.'
 
 const recusa = (status: number, detail: string) =>
   new Response(JSON.stringify({ detail }), {
@@ -54,7 +58,10 @@ async function ponte(req: Request, { params }: { params: { caminho: string[] } }
 
   let r: Response
   try {
-    r = await fetch(base + caminho, { method: req.method, headers: cab, body: corpo, redirect: 'manual', cache: 'no-store' })
+    // pedido sem corpo (apagar um caso, remover um anexo) segue sem corpo: um corpo vazio faz o repasse falhar
+    const semCorpo = !corpo || corpo.byteLength === 0
+    if (semCorpo) cab.delete('content-type')
+    r = await fetch(base + caminho, { method: req.method, headers: cab, body: semCorpo ? undefined : corpo, redirect: 'manual', cache: 'no-store' })
   } catch {
     return recusa(502, 'O servidor das ferramentas não respondeu. Tente de novo em instantes.')
   }
